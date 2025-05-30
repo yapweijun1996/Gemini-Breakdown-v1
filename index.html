@@ -36,6 +36,16 @@
 				--radius-md: 0.5rem;
 				--radius-lg: 0.75rem;
 				--radius-xl: 1rem;
+				
+				/* Desktop-optimized font sizes (1200px+) */
+				--font-size-desktop-title: 1.2rem;        /* was 1.4-1.6rem */
+				--font-size-desktop-subtitle: 1.1rem;     /* was 1.25rem */
+				--font-size-desktop-body: 0.9rem;         /* was 1rem */
+				--font-size-desktop-label: 0.95rem;       /* was 1.1rem */
+				--font-size-desktop-help: 0.85rem;        /* was 1.1rem */
+				--font-size-desktop-button: 1.1rem;       /* was 1.3rem */
+				--font-size-desktop-analysis: 0.85rem;    /* was 0.95rem */
+				--font-size-desktop-analysis-h3: 1.1rem;  /* was 1.3rem */
 			}
 
 			* {
@@ -1625,6 +1635,142 @@
 				display: flex;
 				flex-direction: column;
 				min-height: 0;
+			}
+
+			/* Desktop Typography Optimization - Better font sizes for large screens */
+			@media (min-width: 1200px) {
+				/* Header & Titles */
+				.app-title { 
+					font-size: var(--font-size-desktop-title); 
+				}
+				
+				.section-title { 
+					font-size: var(--font-size-desktop-title); 
+				}
+				
+				.dynamic-title { 
+					font-size: 1.3rem; 
+				}
+				
+				/* Upload Zone */
+				.upload-text { 
+					font-size: var(--font-size-desktop-subtitle); 
+				}
+				
+				.upload-subtitle { 
+					font-size: var(--font-size-desktop-body); 
+				}
+				
+				/* Form Controls */
+				.control-label { 
+					font-size: var(--font-size-desktop-label); 
+				}
+				
+				.control-help { 
+					font-size: var(--font-size-desktop-help);
+					padding: 1rem 1.25rem;
+				}
+				
+				.select-input { 
+					font-size: var(--font-size-desktop-body);
+					padding: 1rem 1.25rem;
+					padding-right: 3rem;
+				}
+				
+				/* Buttons */
+				.analyze-btn { 
+					font-size: var(--font-size-desktop-button);
+					padding: 1.5rem 2rem;
+				}
+				
+				/* Analysis Content */
+				.message.model .analysis-content { 
+					font-size: var(--font-size-desktop-analysis); 
+				}
+				
+				.message.model .analysis-content h3 { 
+					font-size: var(--font-size-desktop-analysis-h3); 
+				}
+				
+				.analysis-progress h4 { 
+					font-size: var(--font-size-desktop-subtitle); 
+				}
+				
+				/* Enhanced Placeholder */
+				.enhanced-placeholder h3 { 
+					font-size: 1.2rem; 
+				}
+				
+				.enhanced-placeholder p { 
+					font-size: 0.95rem; 
+				}
+				
+				/* Sample Cards */
+				.sample-card h4 { 
+					font-size: 0.95rem; 
+				}
+				
+				.sample-card li { 
+					font-size: 0.85rem; 
+				}
+				
+				/* Getting Started */
+				.getting-started h4 { 
+					font-size: 0.95rem; 
+				}
+				
+				.getting-started ol { 
+					font-size: 0.85rem; 
+				}
+				
+				/* Progress Elements */
+				.upload-progress h4 { 
+					font-size: var(--font-size-desktop-body); 
+				}
+				
+				.upload-progress-text { 
+					font-size: 0.8rem; 
+				}
+				
+				.progress-status-text { 
+					font-size: 1rem; 
+				}
+				
+				/* Analysis Type Badge */
+				.analysis-type-badge { 
+					font-size: 0.85rem; 
+				}
+				
+				/* OCR Content */
+				.ocr-content { 
+					font-size: 0.85rem; 
+				}
+				
+				/* Status Indicator */
+				.status-indicator { 
+					font-size: 0.85rem; 
+				}
+				
+				/* Compact Layout Adjustments */
+				.section { 
+					padding: 2rem; 
+				}
+				
+				.control-group { 
+					padding: 1.25rem; 
+				}
+				
+				.upload-zone { 
+					padding: 2.5rem 2rem; 
+				}
+				
+				.analysis-progress { 
+					padding: 2rem; 
+				}
+				
+				.enhanced-placeholder { 
+					padding: 2rem 1.5rem; 
+				}
 			}
 		</style>
 		<script src="./script.js"></script>
