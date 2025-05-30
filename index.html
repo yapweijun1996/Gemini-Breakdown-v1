@@ -308,14 +308,53 @@
 				font-size: 0.95rem;
 				background: var(--background-primary);
 				color: var(--text-primary);
-				transition: all 0.2s ease;
+				transition: all 0.3s ease;
 				font-weight: 500;
+				cursor: pointer;
+				position: relative;
+				appearance: none;
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+				background-position: right 0.75rem center;
+				background-repeat: no-repeat;
+				background-size: 1.5em 1.5em;
+				padding-right: 3rem;
+			}
+
+			.select-input:hover {
+				border-color: var(--accent-color);
+				background-color: var(--background-accent);
+				transform: translateY(-1px);
+				box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.1);
 			}
 
 			.select-input:focus {
 				outline: none;
 				border-color: var(--accent-color);
-				box-shadow: 0 0 0 3px var(--accent-light);
+				box-shadow: 0 0 0 3px var(--accent-light), 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+				background-color: var(--background-primary);
+				transform: translateY(-1px);
+			}
+
+			.select-input:active {
+				transform: translateY(0);
+			}
+
+			/* Visual feedback for changed selections */
+			.select-input.changed {
+				border-color: var(--success-color);
+				background: linear-gradient(135deg, var(--background-primary) 0%, rgba(5, 150, 105, 0.05) 100%);
+				animation: selectionChanged 0.6s ease-out;
+			}
+
+			@keyframes selectionChanged {
+				0% {
+					border-color: var(--success-color);
+					box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
+				}
+				100% {
+					border-color: var(--success-color);
+					box-shadow: 0 0 0 0px rgba(5, 150, 105, 0);
+				}
 			}
 
 			.analyze-btn {
@@ -1255,6 +1294,45 @@
 					transition-duration: 0.01ms !important;
 				}
 			}
+
+			/* Custom scrollbar styling for better visibility */
+			::-webkit-scrollbar {
+				width: 8px;
+				height: 8px;
+			}
+
+			::-webkit-scrollbar-track {
+				background: var(--background-tertiary);
+				border-radius: 4px;
+			}
+
+			::-webkit-scrollbar-thumb {
+				background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+				border-radius: 4px;
+				border: 1px solid var(--background-tertiary);
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background: linear-gradient(135deg, var(--accent-hover) 0%, var(--primary-hover) 100%);
+				box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+			}
+
+			::-webkit-scrollbar-corner {
+				background: var(--background-tertiary);
+			}
+
+			/* Firefox scrollbar styling */
+			* {
+				scrollbar-width: thin;
+				scrollbar-color: var(--accent-color) var(--background-tertiary);
+			}
+
+			.chat-container {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-height: 0;
+			}
 		</style>
 		<script src="./script.js"></script>
 	</head>
@@ -1408,13 +1486,8 @@
 							</div>
 							
 							<div class="getting-started">
-								<h4><i class="fas fa-rocket" aria-hidden="true"></i> Getting Started</h4>
-								<ol>
-									<li>Upload an image using drag & drop or click to browse</li>
-									<li>Choose your preferred AI model and analysis type</li>
-									<li>Click "Analyze Image" to start the process</li>
-									<li>Review the detailed results and download files if available</li>
-								</ol>
+								<h4><i class="fas fa-lightbulb" aria-hidden="true"></i> Quick Tip</h4>
+								<p>For best results, upload clear, high-resolution images and choose the analysis type that matches your needs.</p>
 							</div>
 						</div>
 					</div>
@@ -2075,10 +2148,51 @@
 			// Analyze button event listener
 			document.getElementById("analyzeBtn").addEventListener("click", runAnalysis);
 
+			// Enhanced interactivity for Analysis Settings
+			function addSelectionFeedback() {
+				const modelSelect = document.getElementById("modelSelect");
+				const analysisMode = document.getElementById("analysisMode");
+				
+				// Add change event listeners for visual feedback
+				modelSelect.addEventListener('change', function(e) {
+					// Add visual feedback class
+					e.target.classList.add('changed');
+					
+					// Remove the class after animation
+					setTimeout(() => {
+						e.target.classList.remove('changed');
+					}, 600);
+					
+					// Optional: Show which model was selected
+					console.log('AI Model changed to:', e.target.value);
+				});
+				
+				analysisMode.addEventListener('change', function(e) {
+					// Add visual feedback class
+					e.target.classList.add('changed');
+					
+					// Remove the class after animation
+					setTimeout(() => {
+						e.target.classList.remove('changed');
+					}, 600);
+					
+					// Update help text dynamically based on selection
+					const helpText = e.target.parentNode.querySelector('.control-help');
+					if (e.target.value === 'analysis') {
+						helpText.textContent = 'UI/UX Analysis will provide detailed design insights, usability feedback, and actionable recommendations for improving your interface.';
+					} else {
+						helpText.textContent = 'OCR will extract all readable text from your image while preserving formatting and structure for easy copying and editing.';
+					}
+					
+					console.log('Analysis type changed to:', e.target.value);
+				});
+			}
+
 			// Initialize drag and drop on page load
 			document.addEventListener('DOMContentLoaded', function() {
 				setupDragAndDrop();
 				updateDynamicTitle('initial');
+				addSelectionFeedback();
 			});
 
 			async function performAnalysis(session, base64Data, mimeType) {
