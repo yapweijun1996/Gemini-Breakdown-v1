@@ -275,41 +275,99 @@
 						parts.push({
 							text: "Extract text from the given image. The output text format must follow the same as the given image."
 						});
-					} else {
+						
 						parts.push({
-							text: "Look at this image and identify specific issues or problems. List only the actual issues you see - no introductions or explanations about what you're doing. Focus on:\n- Design problems\n- Layout issues\n- Visual hierarchy problems\n- Content issues\n- Usability problems\n- Technical flaws\n\nBe direct and concise. If no issues, just say 'No significant issues found.'"
+							inline_data: {
+								data: base64Data,
+								mime_type: imageFile.type
+							}
 						});
-					}
-					
-					parts.push({
-						inline_data: {
-							data: base64Data,
-							mime_type: imageFile.type
+						
+						const userMessage = { role: "user", parts };
+						const modelSelect = document.getElementById("modelSelect");
+						const selectedModel = modelSelect.value;
+						const session = await startChatSession(selectedModel);
+						const result = await session.sendMessage(userMessage);
+						
+						// Remove the "Processing..." message
+						const chatMessages = document.getElementById("chatMessages");
+						chatMessages.removeChild(chatMessages.lastChild);
+						
+						if (result.candidates && result.candidates.length > 0) {
+							const candidate = result.candidates[0];
+							const textResponse = candidate.content.parts
+								.filter(p => p.text)
+								.map(p => p.text)
+								.join("\n");
+							appendMessage("model", textResponse || "No response received.");
+							processInlineData(result);
 						}
-					});
+					} else {
+						// Two-step analysis: CoT thinking then summarization
+						appendMessage("system", "Step 1: Deep analysis in progress...");
+						
+						// Step 1: Chain-of-thought analysis
+						const cotParts = [
+							{
+								text: "Analyze this image using chain-of-thought reasoning. Think step by step:\n\n1. First, describe what you see in the image (layout, elements, content, design)\n2. Then, systematically examine each aspect for potential issues:\n   - Visual hierarchy and layout\n   - Typography and readability\n   - Color usage and contrast\n   - Spacing and alignment\n   - Content organization\n   - Usability and user experience\n   - Technical quality\n3. For each area, think through what works well and what doesn't\n4. Consider the intended purpose/audience and how well the design serves that\n\nBe thorough in your thinking process. This analysis will be used to generate a final issue summary."
+							},
+							{
+								inline_data: {
+									data: base64Data,
+									mime_type: imageFile.type
+								}
+							}
+						];
+						
+						const cotMessage = { role: "user", parts: cotParts };
+						const modelSelect = document.getElementById("modelSelect");
+						const selectedModel = modelSelect.value;
+						const session = await startChatSession(selectedModel);
+						const cotResult = await session.sendMessage(cotMessage);
+						
+						if (!cotResult.candidates || cotResult.candidates.length === 0) {
+							throw new Error("No response from CoT analysis");
+						}
+						
+						const cotAnalysis = cotResult.candidates[0].content.parts
+							.filter(p => p.text)
+							.map(p => p.text)
+							.join("\n");
+						
+						// Update status
+						const chatMessages = document.getElementById("chatMessages");
+						chatMessages.removeChild(chatMessages.lastChild); // Remove "Step 1" message
+						appendMessage("system", "Step 2: Summarizing findings...");
+						
+						// Step 2: Summarize the CoT analysis
+						const summaryMessage = {
+							role: "user",
+							parts: [{
+								text: `Based on this detailed analysis, extract only the specific issues and problems identified. List them concisely without explanations or introductions:\n\n${cotAnalysis}\n\nOutput format: Just list the actual issues found, one per line. If no issues, say "No significant issues found."`
+							}]
+						};
+						
+						const summaryResult = await session.sendMessage(summaryMessage);
+						
+						// Remove the "Step 2" message
+						chatMessages.removeChild(chatMessages.lastChild);
+						
+						if (summaryResult.candidates && summaryResult.candidates.length > 0) {
+							const finalSummary = summaryResult.candidates[0].content.parts
+								.filter(p => p.text)
+								.map(p => p.text)
+								.join("\n");
+							appendMessage("model", finalSummary || "No response received.");
+							processInlineData(summaryResult);
+						}
+					}
 				} catch (err) {
 					appendMessage("system", "Error reading image.");
 					return;
 				}
-				const userMessage = { role: "user", parts };
 
 				try {
-					const modelSelect = document.getElementById("modelSelect");
-					const selectedModel = modelSelect.value;
-					const session = await startChatSession(selectedModel);
-					const result = await session.sendMessage(userMessage);
-					// Remove the "Processing..." message (last message)
-					const chatMessages = document.getElementById("chatMessages");
-					chatMessages.removeChild(chatMessages.lastChild);
-					if (result.candidates && result.candidates.length > 0) {
-						const candidate = result.candidates[0];
-						const textResponse = candidate.content.parts
-							.filter(p => p.text)
-							.map(p => p.text)
-							.join("\n");
-						appendMessage("model", textResponse || "No response received.");
-						processInlineData(result);
-					}
+					// OCR handling is now inside the try block above
 				} catch (err) {
 					appendMessage("system", "Error: " + err.message);
 				}
