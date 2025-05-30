@@ -138,40 +138,48 @@
 			.section {
 				background: var(--background-primary);
 				border-radius: var(--radius-xl);
-				padding: 2rem;
-				box-shadow: var(--shadow-sm);
-				border: 1px solid var(--border-color);
+				padding: 2.5rem;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+				border: 2px solid var(--border-color);
 				transition: all 0.3s ease;
 				position: relative;
+				margin-bottom: 2rem;
 			}
 
 			.section:hover {
-				box-shadow: var(--shadow-md);
+				box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 				border-color: var(--border-color-hover);
+				transform: translateY(-2px);
 			}
 
 			.section.accent {
 				border-color: var(--border-accent);
-				background: var(--background-accent);
+				background: linear-gradient(135deg, var(--background-accent) 0%, rgba(124, 58, 237, 0.02) 100%);
 			}
 
 			.section-title {
-				font-size: 1.25rem;
-				font-weight: 700;
-				margin: 0 0 1.5rem 0;
+				font-size: 1.3rem;
+				font-weight: 800;
+				margin: 0 0 2rem 0;
 				color: var(--text-primary);
 				display: flex;
 				align-items: center;
-				gap: 0.75rem;
+				gap: 1rem;
 				position: relative;
+				padding: 1rem 1.5rem;
+				background: linear-gradient(135deg, var(--accent-light) 0%, rgba(124, 58, 237, 0.05) 100%);
+				border-radius: var(--radius-lg);
+				border-left: 5px solid var(--accent-color);
+				margin: -1rem -1.5rem 2rem -1.5rem;
 			}
 
 			.section-title i {
 				color: var(--accent-color);
-				font-size: 1.5rem;
-				background: var(--accent-light);
-				padding: 0.5rem;
+				font-size: 1.6rem;
+				background: rgba(124, 58, 237, 0.15);
+				padding: 0.75rem;
 				border-radius: var(--radius-lg);
+				box-shadow: 0 2px 4px rgba(124, 58, 237, 0.1);
 			}
 
 			.section-title::after {
@@ -282,10 +290,15 @@
 			}
 
 			.control-help {
-				font-size: 0.85rem;
-				color: var(--text-muted);
-				margin-top: 0.25rem;
-				line-height: 1.4;
+				font-size: 0.95rem;
+				color: var(--text-secondary);
+				margin-top: 0.5rem;
+				line-height: 1.6;
+				font-weight: 500;
+				background: var(--background-tertiary);
+				padding: 0.75rem 1rem;
+				border-radius: var(--radius-md);
+				border-left: 3px solid var(--accent-color);
 			}
 
 			.select-input {
@@ -308,12 +321,12 @@
 			.analyze-btn {
 				width: 100%;
 				padding: 1.25rem 2rem;
-				background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+				background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
 				color: white;
 				border: none;
 				border-radius: var(--radius-lg);
 				font-size: 1.1rem;
-				font-weight: 600;
+				font-weight: 700;
 				cursor: pointer;
 				transition: all 0.3s ease;
 				display: flex;
@@ -321,12 +334,14 @@
 				justify-content: center;
 				gap: 0.75rem;
 				margin-top: 1.5rem;
-				box-shadow: var(--shadow-md);
+				box-shadow: 0 4px 6px -1px rgba(29, 78, 216, 0.3), 0 2px 4px -2px rgba(29, 78, 216, 0.2);
+				border: 2px solid transparent;
 			}
 
 			.analyze-btn:hover:not(:disabled) {
+				background: linear-gradient(135deg, #1e40af 0%, #5b21b6 100%);
 				transform: translateY(-2px);
-				box-shadow: var(--shadow-lg);
+				box-shadow: 0 10px 15px -3px rgba(29, 78, 216, 0.4), 0 4px 6px -4px rgba(29, 78, 216, 0.3);
 			}
 
 			.analyze-btn:disabled {
@@ -1082,15 +1097,27 @@
 
 			.sample-card ul {
 				margin: 0;
-				padding-left: 1.25rem;
+				padding-left: 0;
 				font-size: 0.95rem;
-				line-height: 1.6;
+				line-height: 1.7;
+				list-style: none;
 			}
 
 			.sample-card li {
-				margin-bottom: 0.5rem;
-				color: var(--text-feature);
+				margin-bottom: 0.75rem;
+				color: var(--text-secondary);
 				font-weight: 500;
+				position: relative;
+				padding-left: 1.5rem;
+			}
+
+			.sample-card li::before {
+				content: "✓";
+				position: absolute;
+				left: 0;
+				color: var(--success-color);
+				font-weight: 700;
+				font-size: 1rem;
 			}
 
 			.getting-started {
@@ -1241,7 +1268,7 @@
 				</h1>
 				<div class="status-indicator">
 					<div class="status-dot" aria-hidden="true"></div>
-					<span>Ready</span>
+					<span>System Ready</span>
 				</div>
 			</header>
 
@@ -1289,7 +1316,7 @@
 								<option value="gemma-3-27b-it">Gemma 3 27B</option>
 								<option value="gemini-2.5-pro-preview-03-25">Gemini 2.5 Pro</option>
 							</select>
-							<div class="control-help">Choose the AI model for analysis. Gemini 2.0 Flash offers the best balance of speed and accuracy.</div>
+							<div class="control-help">Select your preferred AI model. Gemini 2.0 Flash provides optimal speed and accuracy for most analyses.</div>
 						</div>
 						
 						<div class="control-group">
@@ -1298,7 +1325,7 @@
 								<option value="analysis">UI/UX Analysis</option>
 								<option value="ocr">Text Extraction (OCR)</option>
 							</select>
-							<div class="control-help">UI/UX Analysis provides design feedback and usability insights. OCR extracts readable text from images.</div>
+							<div class="control-help">Choose UI/UX Analysis for design insights and usability feedback, or OCR for extracting text content from images.</div>
 						</div>
 					</div>
 
@@ -1346,10 +1373,10 @@
 						
 						<div class="results-notice">
 							<h4>
-								<i class="fas fa-info-circle" aria-hidden="true"></i>
-								Results Will Appear Here
+								<i class="fas fa-upload" aria-hidden="true"></i>
+								Upload an Image to Begin Analysis
 							</h4>
-							<p>Once you upload an image and click "Analyze Image", the AI analysis results will be displayed in this area. You'll see detailed insights, recommendations, and extracted information based on your selected analysis type.</p>
+							<p>Start by uploading an image using the drag & drop area or browse button in the sidebar. Once uploaded, click "Analyze Image" to receive detailed AI-powered insights including visual design feedback, usability recommendations, and actionable improvements.</p>
 						</div>
 						
 						<div class="enhanced-placeholder">
