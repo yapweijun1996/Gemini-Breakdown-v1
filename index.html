@@ -509,6 +509,30 @@
 				font-weight: 600;
 			}
 
+			.progress-status-text {
+				margin-top: 1.5rem;
+				color: var(--accent-color);
+				font-weight: 700;
+				font-size: 1.1rem;
+				text-align: center;
+				padding: 0.75rem 1.5rem;
+				background: var(--accent-light);
+				border: 2px solid var(--border-accent);
+				border-radius: var(--radius-lg);
+				animation: statusPulse 2s infinite;
+			}
+
+			@keyframes statusPulse {
+				0%, 100% { 
+					background: var(--accent-light);
+					border-color: var(--border-accent);
+				}
+				50% { 
+					background: rgba(124, 58, 237, 0.15);
+					border-color: var(--accent-color);
+				}
+			}
+
 			.preview-container {
 				margin-top: 1.5rem;
 				display: none;
@@ -1266,100 +1290,6 @@
 				}
 			}
 
-			// Enhanced progress indication
-			function showAnalysisProgress() {
-				const chatMessages = document.getElementById("chatMessages");
-				
-				// Remove placeholder if it exists
-				const placeholder = chatMessages.querySelector(".enhanced-placeholder");
-				if (placeholder) {
-					placeholder.remove();
-				}
-				
-				const progressDiv = document.createElement("div");
-				progressDiv.className = "analysis-progress";
-				progressDiv.id = "analysisProgress";
-				
-				progressDiv.innerHTML = `
-					<h4>
-						<i class="fas fa-brain" aria-hidden="true"></i>
-						AI Analysis in Progress
-					</h4>
-					<div class="progress-steps">
-						<div class="progress-line" id="progressLine"></div>
-						${analysisSteps.map(step => `
-							<div class="step" id="step${step.id}" data-step="${step.id}">
-								${step.id}
-							</div>
-						`).join('')}
-					</div>
-					<div class="step-labels">
-						${analysisSteps.map(step => `
-							<div class="step-label" id="label${step.id}">
-								${step.label}
-							</div>
-						`).join('')}
-					</div>
-					<div id="currentStepDescription" style="margin-top: 1rem; color: var(--accent-color); font-weight: 600;">
-						${analysisSteps[0].description}
-					</div>
-				`;
-				
-				chatMessages.appendChild(progressDiv);
-				chatMessages.scrollTop = chatMessages.scrollHeight;
-			}
-
-			function updateAnalysisProgress(stepNumber, description) {
-				const progressLine = document.getElementById("progressLine");
-				const currentStepDesc = document.getElementById("currentStepDescription");
-				
-				if (!progressLine) return;
-				
-				// Update progress line width
-				const progressPercent = ((stepNumber - 1) / (analysisSteps.length - 1)) * 100;
-				progressLine.style.width = progressPercent + "%";
-				
-				// Update step states
-				analysisSteps.forEach(step => {
-					const stepElement = document.getElementById(`step${step.id}`);
-					const labelElement = document.getElementById(`label${step.id}`);
-					
-					if (step.id < stepNumber) {
-						stepElement.classList.remove("active");
-						stepElement.classList.add("completed");
-						stepElement.innerHTML = '<i class="fas fa-check"></i>';
-						labelElement.classList.remove("active");
-					} else if (step.id === stepNumber) {
-						stepElement.classList.add("active");
-						stepElement.classList.remove("completed");
-						stepElement.textContent = step.id;
-						labelElement.classList.add("active");
-					} else {
-						stepElement.classList.remove("active", "completed");
-						stepElement.textContent = step.id;
-						labelElement.classList.remove("active");
-					}
-				});
-				
-				// Update description
-				if (currentStepDesc) {
-					currentStepDesc.textContent = description || analysisSteps[stepNumber - 1]?.description || "";
-				}
-				
-				currentStep = stepNumber;
-			}
-
-			function hideAnalysisProgress() {
-				const progressDiv = document.getElementById("analysisProgress");
-				if (progressDiv) {
-					setTimeout(() => {
-						progressDiv.style.opacity = "0";
-						progressDiv.style.transform = "translateY(-10px)";
-						setTimeout(() => progressDiv.remove(), 300);
-					}, 1000);
-				}
-			}
-
 			// Enhanced message functions with timestamps and better UX
 			function appendMessage(role, text, analysisType = null) {
 				const chatMessages = document.getElementById("chatMessages");
@@ -1411,32 +1341,108 @@
 					notice.remove();
 				}
 				
-				const container = document.createElement("div");
-				container.className = "image-message";
-				
-				const img = document.createElement("img");
-				img.className = "chat-image";
-				img.src = URL.createObjectURL(file);
-				img.alt = file.name || "uploaded image";
-				img.onclick = function() {
-					showPreview(file);
-				};
-				img.onkeydown = function(e) {
-					if (e.key === 'Enter' || e.key === ' ') {
-						e.preventDefault();
-						showPreview(file);
-					}
-				};
-				img.tabIndex = 0;
-				img.setAttribute('role', 'button');
-				img.setAttribute('aria-label', 'Click to view full size image');
-				
-				container.appendChild(img);
-				chatMessages.appendChild(container);
-				chatMessages.scrollTop = chatMessages.scrollHeight;
-				
-				// Update title to show image is ready
+				// Don't add redundant image thumbnail to chat area
+				// Just update the title to show image is ready
 				updateDynamicTitle('uploaded');
+			}
+
+			// Enhanced progress indication with prominent status messages
+			function showAnalysisProgress() {
+				const chatMessages = document.getElementById("chatMessages");
+				
+				// Remove placeholder if it exists
+				const placeholder = chatMessages.querySelector(".enhanced-placeholder");
+				if (placeholder) {
+					placeholder.remove();
+				}
+				
+				const progressDiv = document.createElement("div");
+				progressDiv.className = "analysis-progress";
+				progressDiv.id = "analysisProgress";
+				
+				progressDiv.innerHTML = `
+					<h4>
+						<i class="fas fa-brain" aria-hidden="true"></i>
+						AI Analysis in Progress
+					</h4>
+					<div class="progress-steps">
+						<div class="progress-line" id="progressLine"></div>
+						${analysisSteps.map(step => `
+							<div class="step" id="step${step.id}" data-step="${step.id}">
+								${step.id}
+							</div>
+						`).join('')}
+					</div>
+					<div class="step-labels">
+						${analysisSteps.map(step => `
+							<div class="step-label" id="label${step.id}">
+								${step.label}
+							</div>
+						`).join('')}
+					</div>
+					<div id="currentStepDescription" class="progress-status-text">
+						${analysisSteps[0].description}
+					</div>
+				`;
+				
+				chatMessages.appendChild(progressDiv);
+				chatMessages.scrollTop = chatMessages.scrollHeight;
+			}
+
+			function updateAnalysisProgress(stepNumber, description) {
+				const progressLine = document.getElementById("progressLine");
+				const currentStepDesc = document.getElementById("currentStepDescription");
+				
+				if (!progressLine) return;
+				
+				// Update progress line width
+				const progressPercent = ((stepNumber - 1) / (analysisSteps.length - 1)) * 100;
+				progressLine.style.width = progressPercent + "%";
+				
+				// Update step states
+				analysisSteps.forEach(step => {
+					const stepElement = document.getElementById(`step${step.id}`);
+					const labelElement = document.getElementById(`label${step.id}`);
+					
+					if (step.id < stepNumber) {
+						stepElement.classList.remove("active");
+						stepElement.classList.add("completed");
+						stepElement.innerHTML = '<i class="fas fa-check"></i>';
+						labelElement.classList.remove("active");
+					} else if (step.id === stepNumber) {
+						stepElement.classList.add("active");
+						stepElement.classList.remove("completed");
+						stepElement.textContent = step.id;
+						labelElement.classList.add("active");
+					} else {
+						stepElement.classList.remove("active", "completed");
+						stepElement.textContent = step.id;
+						labelElement.classList.remove("active");
+					}
+				});
+				
+				// Update description with enhanced prominence
+				if (currentStepDesc) {
+					currentStepDesc.textContent = description || analysisSteps[stepNumber - 1]?.description || "";
+					// Add extra emphasis for key stages
+					if (description && (description.includes("summary") || description.includes("analyzing") || description.includes("generating"))) {
+						currentStepDesc.style.fontSize = "1.2rem";
+						currentStepDesc.style.fontWeight = "800";
+					}
+				}
+				
+				currentStep = stepNumber;
+			}
+
+			function hideAnalysisProgress() {
+				const progressDiv = document.getElementById("analysisProgress");
+				if (progressDiv) {
+					setTimeout(() => {
+						progressDiv.style.opacity = "0";
+						progressDiv.style.transform = "translateY(-10px)";
+						setTimeout(() => progressDiv.remove(), 300);
+					}, 1000);
+				}
 			}
 
 			// Upload progress indication
@@ -1965,8 +1971,6 @@ Analysis: ${cotAnalysis}`
 				showAnalysisProgress();
 				updateAnalysisProgress(1, "Preparing image for " + actionText);
 				
-				appendMessage("user", "Uploaded image: " + (imageFile.name || "pasted-image.png"));
-
 				try {
 					updateAnalysisProgress(2, "Reading and processing image data");
 					const base64Data = await readFileAsBase64(imageFile);
