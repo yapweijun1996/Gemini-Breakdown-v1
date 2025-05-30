@@ -626,63 +626,241 @@
 			}
 
 			.message.model .analysis-content {
-				line-height: 1.8;
+				line-height: 1.9;
+				font-size: 0.95rem;
 			}
 
+			/* Enhanced section headers with icons and better visual hierarchy */
 			.message.model .analysis-content h3 {
 				color: var(--accent-color);
-				font-size: 1.2rem;
-				font-weight: 700;
-				margin: 2rem 0 1rem 0;
-				border-bottom: 3px solid var(--border-accent);
-				padding-bottom: 0.75rem;
+				font-size: 1.3rem;
+				font-weight: 800;
+				margin: 2.5rem 0 1.5rem 0;
+				padding: 1rem 1.25rem;
+				background: linear-gradient(135deg, var(--accent-light) 0%, rgba(124, 58, 237, 0.05) 100%);
+				border-radius: var(--radius-lg);
+				border-left: 5px solid var(--accent-color);
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				box-shadow: var(--shadow-sm);
 			}
 
 			.message.model .analysis-content h3:first-child {
 				margin-top: 0;
 			}
 
+			.message.model .analysis-content h3::before {
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				font-size: 1.1rem;
+			}
+
+			.message.model .analysis-content h3[data-section="issues"]::before {
+				content: "\f071"; /* warning triangle */
+				color: var(--warning-color);
+			}
+
+			.message.model .analysis-content h3[data-section="usability"]::before {
+				content: "\f4fe"; /* user cog */
+				color: var(--error-color);
+			}
+
+			.message.model .analysis-content h3[data-section="positive"]::before {
+				content: "\f058"; /* check circle */
+				color: var(--success-color);
+			}
+
+			.message.model .analysis-content h3[data-section="recommendations"]::before {
+				content: "\f0eb"; /* lightbulb */
+				color: var(--primary-color);
+			}
+
+			/* Improved list styling with better spacing */
 			.message.model .analysis-content ul {
-				margin: 1rem 0;
-				padding-left: 1.5rem;
+				margin: 1.5rem 0;
+				padding: 0;
+				list-style: none;
 			}
 
 			.message.model .analysis-content li {
-				margin-bottom: 0.75rem;
-				line-height: 1.7;
+				margin-bottom: 1.25rem;
+				line-height: 1.8;
+				position: relative;
+				padding-left: 0;
+			}
+
+			/* Enhanced card-style layout for each item */
+			.message.model .analysis-content .analysis-item {
+				background: var(--background-primary);
+				border: 2px solid var(--border-color);
+				border-radius: var(--radius-lg);
+				padding: 1.25rem 1.5rem;
+				margin: 1rem 0;
+				box-shadow: var(--shadow-sm);
+				transition: all 0.3s ease;
+			}
+
+			.message.model .analysis-content .analysis-item:hover {
+				border-color: var(--border-color-hover);
+				box-shadow: var(--shadow-md);
+				transform: translateY(-1px);
 			}
 
 			.message.model .analysis-content .issue-item {
-				background: var(--background-tertiary);
-				padding: 1rem 1.25rem;
-				margin: 0.75rem 0;
+				background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, rgba(217, 119, 6, 0.02) 100%);
+				border: 2px solid rgba(217, 119, 6, 0.2);
+				border-left: 5px solid var(--warning-color);
+				padding: 1.25rem 1.5rem;
+				margin: 1rem 0;
 				border-radius: var(--radius-lg);
-				border-left: 4px solid var(--warning-color);
 				box-shadow: var(--shadow-sm);
+			}
+
+			.message.model .analysis-content .issue-item::before {
+				content: "\f071";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--warning-color);
+				margin-right: 0.75rem;
+				font-size: 1rem;
+			}
+
+			.message.model .analysis-content .usability-item {
+				background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.02) 100%);
+				border: 2px solid rgba(220, 38, 38, 0.2);
+				border-left: 5px solid var(--error-color);
+				padding: 1.25rem 1.5rem;
+				margin: 1rem 0;
+				border-radius: var(--radius-lg);
+				box-shadow: var(--shadow-sm);
+			}
+
+			.message.model .analysis-content .usability-item::before {
+				content: "\f4fe";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--error-color);
+				margin-right: 0.75rem;
+				font-size: 1rem;
 			}
 
 			.message.model .analysis-content .positive-item {
-				background: rgba(5, 150, 105, 0.08);
-				padding: 1rem 1.25rem;
-				margin: 0.75rem 0;
+				background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%);
+				border: 2px solid rgba(5, 150, 105, 0.3);
+				border-left: 5px solid var(--success-color);
+				padding: 1.25rem 1.5rem;
+				margin: 1rem 0;
 				border-radius: var(--radius-lg);
-				border-left: 4px solid var(--success-color);
 				box-shadow: var(--shadow-sm);
 			}
 
-			.message.model .analysis-content .summary-section {
-				background: var(--background-accent);
-				padding: 1.5rem;
+			.message.model .analysis-content .positive-item::before {
+				content: "\f058";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--success-color);
+				margin-right: 0.75rem;
+				font-size: 1rem;
+			}
+
+			.message.model .analysis-content .recommendation-item {
+				background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%);
+				border: 2px solid rgba(30, 64, 175, 0.2);
+				border-left: 5px solid var(--primary-color);
+				padding: 1.25rem 1.5rem;
+				margin: 1rem 0;
 				border-radius: var(--radius-lg);
-				margin: 1.5rem 0;
+				box-shadow: var(--shadow-sm);
+				position: relative;
+			}
+
+			.message.model .analysis-content .recommendation-item::before {
+				content: "\f0eb";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--primary-color);
+				margin-right: 0.75rem;
+				font-size: 1rem;
+			}
+
+			/* Action-oriented styling for recommendations */
+			.message.model .analysis-content .action-item {
+				background: linear-gradient(135deg, var(--accent-light) 0%, rgba(124, 58, 237, 0.05) 100%);
 				border: 2px solid var(--border-accent);
+				border-left: 5px solid var(--accent-color);
+				padding: 1.5rem;
+				margin: 1rem 0;
+				border-radius: var(--radius-lg);
+				box-shadow: var(--shadow-md);
+			}
+
+			.message.model .analysis-content .action-item .action-title {
+				font-weight: 700;
+				color: var(--accent-color);
+				font-size: 1.05rem;
+				margin-bottom: 0.5rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.message.model .analysis-content .action-item .action-title::before {
+				content: "\f138";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--accent-color);
+				font-size: 0.9rem;
+			}
+
+			.message.model .analysis-content .action-item .action-steps {
+				color: var(--text-secondary);
+				font-size: 0.95rem;
+				line-height: 1.7;
+				margin-top: 0.75rem;
+			}
+
+			/* Priority indicators */
+			.message.model .analysis-content .priority-high {
+				border-left-color: var(--error-color);
+				background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.03) 100%);
+			}
+
+			.message.model .analysis-content .priority-medium {
+				border-left-color: var(--warning-color);
+				background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(217, 119, 6, 0.03) 100%);
+			}
+
+			.message.model .analysis-content .priority-low {
+				border-left-color: var(--primary-color);
+				background: linear-gradient(135deg, rgba(30, 64, 175, 0.08) 0%, rgba(30, 64, 175, 0.03) 100%);
+			}
+
+			.message.model .analysis-content .summary-section {
+				background: linear-gradient(135deg, var(--background-accent) 0%, rgba(124, 58, 237, 0.05) 100%);
+				padding: 2rem;
+				border-radius: var(--radius-xl);
+				margin: 2rem 0;
+				border: 2px solid var(--border-accent);
+				box-shadow: var(--shadow-accent);
 			}
 
 			.message.model .analysis-content .summary-section h4 {
 				color: var(--accent-color);
-				margin: 0 0 0.75rem 0;
+				margin: 0 0 1rem 0;
+				font-size: 1.2rem;
+				font-weight: 800;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			}
+
+			.message.model .analysis-content .summary-section h4::before {
+				content: "\f0c5";
+				font-family: "Font Awesome 6 Free";
+				font-weight: 900;
+				color: var(--accent-color);
 				font-size: 1.1rem;
-				font-weight: 700;
 			}
 
 			.analysis-type-badge {
@@ -710,13 +888,6 @@
 				border: 2px solid var(--border-color);
 				max-height: 450px;
 				overflow-y: auto;
-			}
-
-			.message-time {
-				font-size: 0.8rem;
-				opacity: 0.75;
-				margin-top: 0.75rem;
-				font-weight: 500;
 			}
 
 			.image-message {
@@ -1316,7 +1487,6 @@
 				
 				msgDiv.innerHTML = `
 					<div class="message-content">${formattedContent}</div>
-					<div class="message-time">${new Date().toLocaleTimeString()}</div>
 				`;
 				chatMessages.appendChild(msgDiv);
 				chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -1516,24 +1686,45 @@
 			}
 
 			function formatAnalysisText(text) {
+				// Remove ** emphasis markers for cleaner text
+				text = text.replace(/\*\*(.*?)\*\*/g, '$1');
+				
 				// Split text into lines and process
 				let lines = text.split('\n').filter(line => line.trim());
 				let formatted = '';
 				let currentSection = '';
 				let inList = false;
+				let sectionType = '';
 
 				for (let line of lines) {
 					line = line.trim();
 					if (!line) continue;
 
-					// Check for section headers (lines ending with colon)
-					if (line.endsWith(':') && line.length < 50) {
+					// Check for section headers (lines ending with colon or containing section keywords)
+					if ((line.endsWith(':') && line.length < 80) || 
+						line.match(/^(Visual Design Issues?|Usability Concerns?|Positive Aspects?|Priority Recommendations?)/i)) {
+						
 						if (inList) {
 							formatted += '</ul>';
 							inList = false;
 						}
-						currentSection = line.replace(':', '');
-						formatted += `<h3>${currentSection}</h3>`;
+						
+						let sectionTitle = line.replace(':', '').trim();
+						
+						// Determine section type for appropriate styling and icons
+						if (sectionTitle.toLowerCase().includes('visual') || sectionTitle.toLowerCase().includes('design issues')) {
+							sectionType = 'issues';
+						} else if (sectionTitle.toLowerCase().includes('usability') || sectionTitle.toLowerCase().includes('concerns')) {
+							sectionType = 'usability';
+						} else if (sectionTitle.toLowerCase().includes('positive') || sectionTitle.toLowerCase().includes('aspects')) {
+							sectionType = 'positive';
+						} else if (sectionTitle.toLowerCase().includes('recommendation') || sectionTitle.toLowerCase().includes('priority')) {
+							sectionType = 'recommendations';
+						} else {
+							sectionType = 'general';
+						}
+						
+						formatted += `<h3 data-section="${sectionType}">${sectionTitle}</h3>`;
 						continue;
 					}
 
@@ -1546,21 +1737,22 @@
 						
 						let cleanLine = line.replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, '');
 						
-						// Check if it's an issue or positive item
-						if (cleanLine.toLowerCase().includes('issue') || 
-							cleanLine.toLowerCase().includes('problem') ||
-							cleanLine.toLowerCase().includes('poor') ||
-							cleanLine.toLowerCase().includes('lacking') ||
-							cleanLine.toLowerCase().includes('inconsistent')) {
-							formatted += `<li><div class="issue-item">${cleanLine}</div></li>`;
-						} else if (cleanLine.toLowerCase().includes('good') || 
-								   cleanLine.toLowerCase().includes('well') ||
-								   cleanLine.toLowerCase().includes('effective') ||
-								   cleanLine.toLowerCase().includes('clear')) {
-							formatted += `<li><div class="positive-item">${cleanLine}</div></li>`;
-						} else {
-							formatted += `<li>${cleanLine}</li>`;
+						// Determine item type based on content and current section
+						let itemClass = 'analysis-item';
+						
+						if (sectionType === 'issues') {
+							itemClass = 'issue-item';
+						} else if (sectionType === 'usability') {
+							itemClass = 'usability-item';
+						} else if (sectionType === 'positive') {
+							itemClass = 'positive-item';
+						} else if (sectionType === 'recommendations') {
+							// For recommendations, make them more actionable
+							itemClass = 'recommendation-item';
+							cleanLine = makeActionable(cleanLine);
 						}
+						
+						formatted += `<li><div class="${itemClass}">${cleanLine}</div></li>`;
 						continue;
 					}
 
@@ -1575,6 +1767,12 @@
 						line.toLowerCase().includes('conclusion') ||
 						line.toLowerCase().includes('overall')) {
 						formatted += `<div class="summary-section"><h4>Summary</h4><p>${line}</p></div>`;
+					} else if (sectionType === 'recommendations' && line.length > 20) {
+						// For recommendation sections, format paragraphs as actionable items
+						formatted += `<div class="action-item">
+							<div class="action-title">Action Required</div>
+							<div class="action-steps">${makeActionable(line)}</div>
+						</div>`;
 					} else {
 						formatted += `<p>${line}</p>`;
 					}
@@ -1585,6 +1783,25 @@
 				}
 
 				return formatted || text; // Fallback to original text if formatting fails
+			}
+			
+			// Helper function to make recommendations more actionable
+			function makeActionable(text) {
+				// Add action-oriented language and clear next steps
+				if (text.toLowerCase().includes('improve') || text.toLowerCase().includes('enhance')) {
+					return `${text} <strong>Next steps:</strong> Review current implementation and create an improvement plan with specific deadlines.`;
+				} else if (text.toLowerCase().includes('add') || text.toLowerCase().includes('include')) {
+					return `${text} <strong>Action:</strong> Prioritize this addition in your next design iteration.`;
+				} else if (text.toLowerCase().includes('remove') || text.toLowerCase().includes('eliminate')) {
+					return `${text} <strong>Action:</strong> Schedule this for immediate removal or redesign.`;
+				} else if (text.toLowerCase().includes('consider') || text.toLowerCase().includes('think about')) {
+					return `${text} <strong>Action:</strong> Conduct user research or A/B testing to validate this approach.`;
+				} else if (text.toLowerCase().includes('redesign') || text.toLowerCase().includes('restructure')) {
+					return `${text} <strong>Action:</strong> Create wireframes and prototypes before implementation.`;
+				}
+				
+				// For general recommendations, add actionable context
+				return `${text} <strong>Action:</strong> Review and implement this recommendation based on your project priorities.`;
 			}
 
 			// Enhanced preview functions with keyboard support
@@ -1871,25 +2088,30 @@
 				const summaryMessage = {
 					role: "user",
 					parts: [{
-						text: `Based on this detailed analysis, create a structured summary of the findings. Format the response as follows:
+						text: `Based on this detailed analysis, create a structured summary of the findings. Format the response exactly as follows:
 
-**Visual Design Issues:**
-- List specific visual design problems found
-- Include typography, color, spacing issues
+Visual Design Issues:
+- List specific visual design problems found (typography, color, spacing, layout issues)
+- Include specific technical issues or inconsistencies
 
-**Usability Concerns:**
-- List user experience and usability issues
-- Include navigation, accessibility, interaction problems
+Usability Concerns:
+- List user experience and usability problems
+- Include navigation, accessibility, and interaction issues
 
-**Positive Aspects:**
+Positive Aspects:
 - List what works well in the design
-- Highlight effective design choices
+- Highlight effective design choices and strengths
 
-**Priority Recommendations:**
-- List the most important improvements needed
-- Focus on high-impact changes
+Priority Recommendations:
+- Provide specific, actionable improvements with clear next steps
+- Focus on high-impact changes that will improve user experience
+- Use action-oriented language (improve, add, remove, redesign, etc.)
 
-If no significant issues are found, clearly state "No significant issues identified" and focus on positive aspects.
+Important formatting notes:
+- Use simple list format with hyphens (-)
+- Avoid using ** for emphasis - use clear, descriptive language instead
+- Be specific and actionable in recommendations
+- If no significant issues are found, clearly state "No significant issues identified" and focus on positive aspects
 
 Analysis: ${cotAnalysis}`
 					}]
