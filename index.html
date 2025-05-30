@@ -8,10 +8,11 @@
 		
 		<style>
 			:root {
-				--primary-color: #2563eb;
+				--primary-color: #1e40af;
 				--primary-hover: #1d4ed8;
 				--secondary-color: #64748b;
 				--accent-color: #7c3aed;
+				--accent-hover: #6d28d9;
 				--accent-light: rgba(124, 58, 237, 0.1);
 				--success-color: #059669;
 				--warning-color: #d97706;
@@ -21,8 +22,8 @@
 				--background-tertiary: #f1f5f9;
 				--background-accent: #faf5ff;
 				--text-primary: #0f172a;
-				--text-secondary: #475569;
-				--text-muted: #94a3b8;
+				--text-secondary: #334155;
+				--text-muted: #64748b;
 				--border-color: #e2e8f0;
 				--border-color-hover: #cbd5e1;
 				--border-accent: #c4b5fd;
@@ -183,6 +184,10 @@
 				border-radius: 1px;
 			}
 
+			.dynamic-title {
+				transition: all 0.3s ease;
+			}
+
 			.upload-zone {
 				border: 2px dashed var(--border-color);
 				border-radius: var(--radius-xl);
@@ -320,6 +325,110 @@
 				to { transform: rotate(360deg); }
 			}
 
+			.analysis-progress {
+				background: var(--background-primary);
+				border: 2px solid var(--accent-color);
+				border-radius: var(--radius-xl);
+				padding: 2rem;
+				margin: 1.5rem 0;
+				text-align: center;
+				box-shadow: var(--shadow-accent);
+			}
+
+			.analysis-progress h4 {
+				color: var(--accent-color);
+				font-size: 1.2rem;
+				font-weight: 700;
+				margin: 0 0 1rem 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.75rem;
+			}
+
+			.analysis-progress .progress-steps {
+				display: flex;
+				justify-content: space-between;
+				margin: 1.5rem 0;
+				position: relative;
+			}
+
+			.analysis-progress .progress-steps::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 0;
+				right: 0;
+				height: 2px;
+				background: var(--border-color);
+				transform: translateY(-50%);
+				z-index: 1;
+			}
+
+			.analysis-progress .progress-steps .progress-line {
+				position: absolute;
+				top: 50%;
+				left: 0;
+				height: 2px;
+				background: var(--accent-color);
+				transform: translateY(-50%);
+				transition: width 0.5s ease;
+				z-index: 2;
+			}
+
+			.analysis-progress .step {
+				position: relative;
+				z-index: 3;
+				background: var(--background-primary);
+				border: 2px solid var(--border-color);
+				border-radius: 50%;
+				width: 40px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: var(--text-muted);
+				transition: all 0.3s ease;
+			}
+
+			.analysis-progress .step.active {
+				border-color: var(--accent-color);
+				background: var(--accent-color);
+				color: white;
+				animation: stepPulse 2s infinite;
+			}
+
+			.analysis-progress .step.completed {
+				border-color: var(--success-color);
+				background: var(--success-color);
+				color: white;
+			}
+
+			@keyframes stepPulse {
+				0%, 100% { transform: scale(1); }
+				50% { transform: scale(1.1); }
+			}
+
+			.analysis-progress .step-labels {
+				display: flex;
+				justify-content: space-between;
+				margin-top: 0.75rem;
+			}
+
+			.analysis-progress .step-label {
+				font-size: 0.75rem;
+				color: var(--text-secondary);
+				text-align: center;
+				max-width: 80px;
+			}
+
+			.analysis-progress .step-label.active {
+				color: var(--accent-color);
+				font-weight: 600;
+			}
+
 			.preview-container {
 				margin-top: 1.5rem;
 				display: none;
@@ -361,8 +470,8 @@
 				display: flex;
 				flex-direction: column;
 				gap: 1.5rem;
-				min-height: 400px;
-				max-height: 70vh;
+				min-height: 500px;
+				max-height: 75vh;
 			}
 
 			.message {
@@ -669,14 +778,40 @@
 			}
 
 			.downloads-status .status-text {
-				font-weight: 600;
-				font-size: 1rem;
+				font-weight: 700;
+				font-size: 1.1rem;
 			}
 
 			.downloads-status .status-detail {
 				font-size: 0.9rem;
 				opacity: 0.85;
 				margin-top: 0.25rem;
+			}
+
+			.download-cta {
+				background: var(--accent-light);
+				border: 2px solid var(--accent-color);
+				border-radius: var(--radius-lg);
+				padding: 1.5rem;
+				text-align: center;
+				margin-bottom: 1rem;
+			}
+
+			.download-cta h4 {
+				color: var(--accent-color);
+				font-size: 1.2rem;
+				font-weight: 700;
+				margin: 0 0 0.5rem 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+			}
+
+			.download-cta p {
+				color: var(--text-secondary);
+				margin: 0;
+				font-size: 0.95rem;
 			}
 
 			.empty-state {
@@ -696,40 +831,70 @@
 				background: var(--background-primary);
 				border: 2px dashed var(--border-accent);
 				border-radius: var(--radius-xl);
-				padding: 3rem 2rem;
+				padding: 2.5rem 1.5rem;
 				text-align: center;
 				color: var(--text-secondary);
 			}
 
 			.enhanced-placeholder h3 {
 				color: var(--accent-color);
-				font-size: 1.4rem;
+				font-size: 1.3rem;
 				font-weight: 700;
-				margin: 0 0 1rem 0;
+				margin: 0 0 0.75rem 0;
 			}
 
 			.enhanced-placeholder p {
-				font-size: 1.1rem;
+				font-size: 1rem;
 				line-height: 1.6;
-				margin-bottom: 2rem;
+				margin-bottom: 1.5rem;
 			}
 
 			.sample-results {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
-				gap: 1.5rem;
-				margin-top: 2rem;
+				gap: 1rem;
+				margin-top: 1.5rem;
 			}
 
 			.sample-card {
 				background: var(--background-tertiary);
-				padding: 1.5rem;
+				padding: 1.25rem;
 				border-radius: var(--radius-lg);
 				border: 1px solid var(--border-color);
 			}
 
 			.sample-card h4 {
 				color: var(--primary-color);
+				font-size: 0.95rem;
+				font-weight: 600;
+				margin: 0 0 0.5rem 0;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.sample-card ul {
+				margin: 0;
+				padding-left: 1rem;
+				font-size: 0.8rem;
+				line-height: 1.4;
+			}
+
+			.sample-card li {
+				margin-bottom: 0.25rem;
+				color: var(--text-secondary);
+			}
+
+			.getting-started {
+				background: var(--accent-light);
+				border: 1px solid var(--border-accent);
+				border-radius: var(--radius-lg);
+				padding: 1.25rem;
+				margin-top: 1.5rem;
+			}
+
+			.getting-started h4 {
+				color: var(--accent-color);
 				font-size: 1rem;
 				font-weight: 600;
 				margin: 0 0 0.75rem 0;
@@ -738,45 +903,16 @@
 				gap: 0.5rem;
 			}
 
-			.sample-card ul {
-				margin: 0;
-				padding-left: 1.2rem;
-				font-size: 0.9rem;
-				line-height: 1.5;
-			}
-
-			.sample-card li {
-				margin-bottom: 0.5rem;
-				color: var(--text-secondary);
-			}
-
-			.getting-started {
-				background: var(--accent-light);
-				border: 1px solid var(--border-accent);
-				border-radius: var(--radius-lg);
-				padding: 1.5rem;
-				margin-top: 2rem;
-			}
-
-			.getting-started h4 {
-				color: var(--accent-color);
-				font-size: 1.1rem;
-				font-weight: 600;
-				margin: 0 0 1rem 0;
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-			}
-
 			.getting-started ol {
 				margin: 0;
-				padding-left: 1.5rem;
+				padding-left: 1.25rem;
 				color: var(--text-secondary);
-				line-height: 1.6;
+				line-height: 1.5;
+				font-size: 0.9rem;
 			}
 
 			.getting-started li {
-				margin-bottom: 0.5rem;
+				margin-bottom: 0.375rem;
 			}
 
 			/* Responsive Design */
@@ -796,6 +932,10 @@
 
 				.sample-results {
 					grid-template-columns: 1fr;
+				}
+
+				.chat-messages {
+					min-height: 400px;
 				}
 			}
 
@@ -824,9 +964,17 @@
 				.sample-results {
 					grid-template-columns: 1fr;
 				}
+
+				.enhanced-placeholder {
+					padding: 2rem 1rem;
+				}
+
+				.chat-messages {
+					min-height: 350px;
+				}
 			}
 
-			/* Accessibility improvements */
+			/* Accessibility improvements - Enhanced contrast */
 			.sr-only {
 				position: absolute;
 				width: 1px;
@@ -840,7 +988,7 @@
 			}
 
 			*:focus {
-				outline: 2px solid var(--accent-color);
+				outline: 3px solid var(--accent-color);
 				outline-offset: 2px;
 			}
 
@@ -849,6 +997,27 @@
 			input:focus {
 				outline: none;
 				box-shadow: 0 0 0 3px var(--accent-light);
+			}
+
+			/* High contrast mode support */
+			@media (prefers-contrast: high) {
+				:root {
+					--text-primary: #000000;
+					--text-secondary: #1a1a1a;
+					--background-primary: #ffffff;
+					--border-color: #666666;
+				}
+			}
+
+			/* Reduced motion support */
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					animation-duration: 0.01ms !important;
+					animation-iteration-count: 1 !important;
+					transition-duration: 0.01ms !important;
+				}
 			}
 		</style>
 		<script src="./script.js"></script>
@@ -955,9 +1124,9 @@
 			<!-- Main Content Area -->
 			<main class="main-content" role="main" aria-label="Analysis Results">
 				<section class="section chat-container">
-					<h2 class="section-title">
-						<i class="fas fa-comments" aria-hidden="true"></i>
-						Analysis Results
+					<h2 id="dynamicTitle" class="section-title dynamic-title">
+						<i class="fas fa-upload" aria-hidden="true"></i>
+						Upload Image to See Results
 					</h2>
 					
 					<div id="chatMessages" 
@@ -1038,6 +1207,135 @@
 			let chatHistory = [];
 			let currentImageFile = null;
 			let isAnalyzing = false;
+			let currentStep = 0;
+
+			// Progress steps for analysis
+			const analysisSteps = [
+				{ id: 1, label: "Upload", description: "Preparing image" },
+				{ id: 2, label: "Process", description: "AI analyzing" },
+				{ id: 3, label: "Generate", description: "Creating results" },
+				{ id: 4, label: "Complete", description: "Finished" }
+			];
+
+			// Dynamic title management
+			function updateDynamicTitle(state, analysisType = null) {
+				const titleElement = document.getElementById("dynamicTitle");
+				const icon = titleElement.querySelector("i");
+				
+				switch(state) {
+					case 'initial':
+						icon.className = "fas fa-upload";
+						titleElement.lastChild.textContent = " Upload Image to See Results";
+						break;
+					case 'uploaded':
+						icon.className = "fas fa-image";
+						titleElement.lastChild.textContent = " Image Ready for Analysis";
+						break;
+					case 'analyzing':
+						icon.className = "fas fa-cog fa-spin";
+						const type = analysisType === 'ocr' ? 'OCR' : 'UI/UX';
+						titleElement.lastChild.textContent = ` Analyzing Image (${type})`;
+						break;
+					case 'results':
+						icon.className = "fas fa-comments";
+						titleElement.lastChild.textContent = " Analysis Results";
+						break;
+				}
+			}
+
+			// Enhanced progress indication
+			function showAnalysisProgress() {
+				const chatMessages = document.getElementById("chatMessages");
+				
+				// Remove placeholder if it exists
+				const placeholder = chatMessages.querySelector(".enhanced-placeholder");
+				if (placeholder) {
+					placeholder.remove();
+				}
+				
+				const progressDiv = document.createElement("div");
+				progressDiv.className = "analysis-progress";
+				progressDiv.id = "analysisProgress";
+				
+				progressDiv.innerHTML = `
+					<h4>
+						<i class="fas fa-brain" aria-hidden="true"></i>
+						AI Analysis in Progress
+					</h4>
+					<div class="progress-steps">
+						<div class="progress-line" id="progressLine"></div>
+						${analysisSteps.map(step => `
+							<div class="step" id="step${step.id}" data-step="${step.id}">
+								${step.id}
+							</div>
+						`).join('')}
+					</div>
+					<div class="step-labels">
+						${analysisSteps.map(step => `
+							<div class="step-label" id="label${step.id}">
+								${step.label}
+							</div>
+						`).join('')}
+					</div>
+					<div id="currentStepDescription" style="margin-top: 1rem; color: var(--accent-color); font-weight: 600;">
+						${analysisSteps[0].description}
+					</div>
+				`;
+				
+				chatMessages.appendChild(progressDiv);
+				chatMessages.scrollTop = chatMessages.scrollHeight;
+			}
+
+			function updateAnalysisProgress(stepNumber, description) {
+				const progressLine = document.getElementById("progressLine");
+				const currentStepDesc = document.getElementById("currentStepDescription");
+				
+				if (!progressLine) return;
+				
+				// Update progress line width
+				const progressPercent = ((stepNumber - 1) / (analysisSteps.length - 1)) * 100;
+				progressLine.style.width = progressPercent + "%";
+				
+				// Update step states
+				analysisSteps.forEach(step => {
+					const stepElement = document.getElementById(`step${step.id}`);
+					const labelElement = document.getElementById(`label${step.id}`);
+					
+					if (step.id < stepNumber) {
+						stepElement.classList.remove("active");
+						stepElement.classList.add("completed");
+						stepElement.innerHTML = '<i class="fas fa-check"></i>';
+						labelElement.classList.remove("active");
+					} else if (step.id === stepNumber) {
+						stepElement.classList.add("active");
+						stepElement.classList.remove("completed");
+						stepElement.textContent = step.id;
+						labelElement.classList.add("active");
+					} else {
+						stepElement.classList.remove("active", "completed");
+						stepElement.textContent = step.id;
+						labelElement.classList.remove("active");
+					}
+				});
+				
+				// Update description
+				if (currentStepDesc) {
+					currentStepDesc.textContent = description || analysisSteps[stepNumber - 1]?.description || "";
+				}
+				
+				currentStep = stepNumber;
+			}
+
+			function hideAnalysisProgress() {
+				const progressDiv = document.getElementById("analysisProgress");
+				if (progressDiv) {
+					setTimeout(() => {
+						progressDiv.style.opacity = "0";
+						progressDiv.style.transform = "translateY(-10px)";
+						setTimeout(() => progressDiv.remove(), 300);
+					}, 1000);
+				}
+			}
 
 			// Enhanced message functions with timestamps and better UX
 			function appendMessage(role, text, analysisType = null) {
@@ -1066,10 +1364,38 @@
 				chatMessages.appendChild(msgDiv);
 				chatMessages.scrollTop = chatMessages.scrollHeight;
 				
-				// Announce to screen readers
+				// Update title to show results
 				if (role === "model") {
+					updateDynamicTitle('results');
 					announceToScreenReader("Analysis complete: " + text.substring(0, 100));
 				}
+			}
+
+			function updateDownloadStatus(status, message, detail = null) {
+				const container = document.getElementById("downloadContainer");
+				let statusDiv = container.querySelector('.downloads-status');
+				
+				if (!statusDiv) {
+					statusDiv = document.createElement('div');
+					statusDiv.className = 'downloads-status';
+					container.insertBefore(statusDiv, container.firstChild);
+				}
+				
+				// Remove existing status classes
+				statusDiv.classList.remove('waiting', 'processing', 'completed');
+				statusDiv.classList.add(status);
+				
+				let icon = 'fas fa-clock';
+				if (status === 'processing') icon = 'fas fa-spinner fa-spin';
+				if (status === 'completed') icon = 'fas fa-check-circle';
+				
+				statusDiv.innerHTML = `
+					<i class="${icon}" aria-hidden="true"></i>
+					<div>
+						<div class="status-text">${message}</div>
+						${detail ? `<div class="status-detail">${detail}</div>` : ''}
+					</div>
+				`;
 			}
 
 			function formatAnalysisResponse(text, analysisType) {
@@ -1204,6 +1530,9 @@
 				container.appendChild(img);
 				chatMessages.appendChild(container);
 				chatMessages.scrollTop = chatMessages.scrollHeight;
+				
+				// Update title to show image is ready
+				updateDynamicTitle('uploaded');
 			}
 
 			// Enhanced preview functions with keyboard support
@@ -1241,81 +1570,6 @@
 					reader.onerror = () => reject(new Error('Failed to read the image file.'));
 					reader.readAsDataURL(file);
 				});
-			}
-
-			// Enhanced download processing with status updates
-			function processInlineData(result) {
-				const container = document.getElementById("downloadContainer");
-				updateDownloadStatus('processing', 'Processing downloads...');
-				
-				// Clear previous downloads but keep status
-				const existingLinks = container.querySelectorAll('.download-link');
-				existingLinks.forEach(link => link.remove());
-				
-				let hasDownloads = false;
-				
-				if (result.candidates) {
-					result.candidates.forEach((cand, i) => {
-						cand.content.parts.forEach((part, j) => {
-							if (part.inline_data) {
-								hasDownloads = true;
-								const bytes = atob(part.inline_data.data);
-								let byteNumbers = [];
-								for (let k = 0; k < bytes.length; k++) {
-									byteNumbers.push(bytes.charCodeAt(k));
-								}
-								const blob = new Blob(
-									[new Uint8Array(byteNumbers)],
-									{ type: part.inline_data.mime_type }
-								);
-								const url = URL.createObjectURL(blob);
-								const ext = part.inline_data.mime_type.split("/")[1] || "bin";
-								const link = document.createElement("a");
-								link.href = url;
-								link.download = "output_" + i + "_" + j + "." + ext;
-								link.className = "download-link";
-								link.innerHTML = `
-									<i class="fas fa-download" aria-hidden="true"></i>
-									Download ${link.download}
-								`;
-								container.appendChild(link);
-							}
-						});
-					});
-				}
-				
-				if (hasDownloads) {
-					updateDownloadStatus('completed', 'Downloads ready', `${container.querySelectorAll('.download-link').length} file(s) available`);
-				} else {
-					updateDownloadStatus('completed', 'Analysis complete', 'No downloadable files generated');
-				}
-			}
-
-			function updateDownloadStatus(status, message, detail = null) {
-				const container = document.getElementById("downloadContainer");
-				let statusDiv = container.querySelector('.downloads-status');
-				
-				if (!statusDiv) {
-					statusDiv = document.createElement('div');
-					statusDiv.className = 'downloads-status';
-					container.insertBefore(statusDiv, container.firstChild);
-				}
-				
-				// Remove existing status classes
-				statusDiv.classList.remove('waiting', 'processing', 'completed');
-				statusDiv.classList.add(status);
-				
-				let icon = 'fas fa-clock';
-				if (status === 'processing') icon = 'fas fa-spinner fa-spin';
-				if (status === 'completed') icon = 'fas fa-check-circle';
-				
-				statusDiv.innerHTML = `
-					<i class="${icon}" aria-hidden="true"></i>
-					<div>
-						<div class="status-text">${message}</div>
-						${detail ? `<div class="status-detail">${detail}</div>` : ''}
-					</div>
-				`;
 			}
 
 			// Enhanced chat session with better error handling
@@ -1376,14 +1630,19 @@
 				const actionText = analysisMode === "ocr" ? "OCR" : "analysis";
 				
 				setAnalyzingState(true);
+				updateDynamicTitle('analyzing', analysisMode);
+				
+				// Show enhanced progress indication
+				showAnalysisProgress();
+				updateAnalysisProgress(1, "Preparing image for " + actionText);
 				
 				appendMessage("user", "Uploaded image: " + (imageFile.name || "pasted-image.png"));
-				showProgress("Preparing image for " + actionText + "...", 10);
 
 				try {
+					updateAnalysisProgress(2, "Reading and processing image data");
 					const base64Data = await readFileAsBase64(imageFile);
-					showProgress("Connecting to AI model...", 30);
 					
+					updateAnalysisProgress(2, "Connecting to AI model");
 					const modelSelect = document.getElementById("modelSelect");
 					const selectedModel = modelSelect.value;
 					const session = await startChatSession(selectedModel);
@@ -1394,20 +1653,21 @@
 						await performAnalysis(session, base64Data, imageFile.type);
 					}
 					
-					showProgress("Analysis complete!", 100);
-					setTimeout(() => hideProgress(), 2000);
+					updateAnalysisProgress(4, "Analysis complete!");
+					setTimeout(() => hideAnalysisProgress(), 2000);
 					
 				} catch (err) {
 					console.error('Analysis error:', err);
 					showAlert("Error: " + err.message, "error");
-					hideProgress();
+					hideAnalysisProgress();
+					updateDynamicTitle('uploaded');
 				} finally {
 					setAnalyzingState(false);
 				}
 			}
 
 			async function performOCR(session, base64Data, mimeType) {
-				showProgress("Extracting text from image...", 60);
+				updateAnalysisProgress(3, "Extracting text from image");
 				updateDownloadStatus('processing', 'Analyzing image for text...');
 				
 				const parts = [
@@ -1425,8 +1685,6 @@
 				const userMessage = { role: "user", parts };
 				const result = await session.sendMessage(userMessage);
 				
-				showProgress("Processing OCR results...", 90);
-				
 				if (result.candidates && result.candidates.length > 0) {
 					const candidate = result.candidates[0];
 					const textResponse = candidate.content.parts
@@ -1440,7 +1698,7 @@
 
 			async function performAnalysis(session, base64Data, mimeType) {
 				// Step 1: Chain-of-thought analysis
-				showProgress("Performing deep analysis...", 40);
+				updateAnalysisProgress(3, "Performing deep UI/UX analysis");
 				updateDownloadStatus('processing', 'Analyzing UI/UX elements...');
 				
 				const cotParts = [
@@ -1468,7 +1726,7 @@
 					.join("\n");
 				
 				// Step 2: Summarize the CoT analysis
-				showProgress("Summarizing findings...", 75);
+				updateAnalysisProgress(3, "Generating structured summary");
 				updateDownloadStatus('processing', 'Generating analysis summary...');
 				
 				const summaryMessage = {
@@ -1507,6 +1765,62 @@ Analysis: ${cotAnalysis}`
 						.join("\n");
 					appendMessage("model", finalSummary || "No response received.", "analysis");
 					processInlineData(summaryResult);
+				}
+			}
+
+			// Enhanced download processing with better CTA
+			function processInlineData(result) {
+				const container = document.getElementById("downloadContainer");
+				
+				// Clear previous downloads but keep status
+				const existingLinks = container.querySelectorAll('.download-link');
+				const existingCTA = container.querySelector('.download-cta');
+				existingLinks.forEach(link => link.remove());
+				if (existingCTA) existingCTA.remove();
+				
+				let hasDownloads = false;
+				
+				if (result.candidates) {
+					result.candidates.forEach((cand, i) => {
+						cand.content.parts.forEach((part, j) => {
+							if (part.inline_data) {
+								hasDownloads = true;
+								const bytes = atob(part.inline_data.data);
+								let byteNumbers = [];
+								for (let k = 0; k < bytes.length; k++) {
+									byteNumbers.push(bytes.charCodeAt(k));
+								}
+								const blob = new Blob(
+									[new Uint8Array(byteNumbers)],
+									{ type: part.inline_data.mime_type }
+								);
+								const url = URL.createObjectURL(blob);
+								const ext = part.inline_data.mime_type.split("/")[1] || "bin";
+								const link = document.createElement("a");
+								link.href = url;
+								link.download = "output_" + i + "_" + j + "." + ext;
+								link.className = "download-link";
+								link.innerHTML = `
+									<i class="fas fa-download" aria-hidden="true"></i>
+									Download ${link.download}
+								`;
+								container.appendChild(link);
+							}
+						});
+					});
+				}
+				
+				if (hasDownloads) {
+					const ctaDiv = document.createElement('div');
+					ctaDiv.className = 'download-cta';
+					ctaDiv.innerHTML = `
+						<h4><i class="fas fa-download" aria-hidden="true"></i> Download Results</h4>
+						<p>Your analysis is complete! Download the generated files below.</p>
+					`;
+					container.insertBefore(ctaDiv, container.firstChild);
+					updateDownloadStatus('completed', 'Downloads ready', `${container.querySelectorAll('.download-link').length} file(s) available`);
+				} else {
+					updateDownloadStatus('completed', 'Analysis complete', 'No downloadable files generated');
 				}
 			}
 
@@ -1709,7 +2023,7 @@ Analysis: ${cotAnalysis}`
 			// Initialize drag and drop on page load
 			document.addEventListener('DOMContentLoaded', function() {
 				setupDragAndDrop();
-				// Don't show any initial download status - it will appear when needed
+				updateDynamicTitle('initial');
 			});
 		</script>
 	</body>
