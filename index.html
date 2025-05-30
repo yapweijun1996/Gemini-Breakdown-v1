@@ -357,6 +357,90 @@
 				border-bottom-left-radius: var(--radius-sm);
 			}
 
+			.message.model .analysis-content {
+				line-height: 1.8;
+			}
+
+			.message.model .analysis-content h3 {
+				color: var(--primary-color);
+				font-size: 1.1rem;
+				font-weight: 600;
+				margin: 1.5rem 0 0.75rem 0;
+				border-bottom: 2px solid var(--border-color);
+				padding-bottom: 0.5rem;
+			}
+
+			.message.model .analysis-content h3:first-child {
+				margin-top: 0;
+			}
+
+			.message.model .analysis-content ul {
+				margin: 0.75rem 0;
+				padding-left: 1.5rem;
+			}
+
+			.message.model .analysis-content li {
+				margin-bottom: 0.5rem;
+				line-height: 1.6;
+			}
+
+			.message.model .analysis-content .issue-item {
+				background: var(--background-tertiary);
+				padding: 0.75rem 1rem;
+				margin: 0.5rem 0;
+				border-radius: var(--radius-md);
+				border-left: 4px solid var(--warning-color);
+			}
+
+			.message.model .analysis-content .positive-item {
+				background: rgba(5, 150, 105, 0.1);
+				padding: 0.75rem 1rem;
+				margin: 0.5rem 0;
+				border-radius: var(--radius-md);
+				border-left: 4px solid var(--success-color);
+			}
+
+			.message.model .analysis-content .summary-section {
+				background: var(--background-secondary);
+				padding: 1rem;
+				border-radius: var(--radius-md);
+				margin: 1rem 0;
+				border: 1px solid var(--border-color);
+			}
+
+			.message.model .analysis-content .summary-section h4 {
+				color: var(--primary-color);
+				margin: 0 0 0.5rem 0;
+				font-size: 1rem;
+				font-weight: 600;
+			}
+
+			.analysis-type-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				background: var(--primary-color);
+				color: white;
+				padding: 0.25rem 0.75rem;
+				border-radius: 1rem;
+				font-size: 0.875rem;
+				font-weight: 500;
+				margin-bottom: 1rem;
+			}
+
+			.ocr-content {
+				background: var(--background-tertiary);
+				padding: 1rem;
+				border-radius: var(--radius-md);
+				font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+				font-size: 0.9rem;
+				line-height: 1.6;
+				white-space: pre-wrap;
+				border: 1px solid var(--border-color);
+				max-height: 400px;
+				overflow-y: auto;
+			}
+
 			.message-time {
 				font-size: 0.75rem;
 				opacity: 0.7;
@@ -489,6 +573,49 @@
 
 			.download-link:hover {
 				background: #047857;
+			}
+
+			.downloads-status {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				padding: 1rem;
+				background: var(--background-tertiary);
+				border-radius: var(--radius-md);
+				margin-bottom: 1rem;
+				border: 1px solid var(--border-color);
+			}
+
+			.downloads-status.completed {
+				background: rgba(5, 150, 105, 0.1);
+				border-color: var(--success-color);
+				color: var(--success-color);
+			}
+
+			.downloads-status.processing {
+				background: rgba(217, 119, 6, 0.1);
+				border-color: var(--warning-color);
+				color: var(--warning-color);
+			}
+
+			.downloads-status.waiting {
+				background: var(--background-tertiary);
+				border-color: var(--border-color);
+				color: var(--text-secondary);
+			}
+
+			.downloads-status i {
+				font-size: 1.25rem;
+			}
+
+			.downloads-status .status-text {
+				font-weight: 500;
+			}
+
+			.downloads-status .status-detail {
+				font-size: 0.875rem;
+				opacity: 0.8;
+				margin-top: 0.25rem;
 			}
 
 			.empty-state {
@@ -739,7 +866,7 @@
 			let isAnalyzing = false;
 
 			// Enhanced message functions with timestamps and better UX
-			function appendMessage(role, text) {
+			function appendMessage(role, text, analysisType = null) {
 				const chatMessages = document.getElementById("chatMessages");
 				
 				// Remove empty state if it exists
@@ -750,8 +877,16 @@
 				
 				const msgDiv = document.createElement("div");
 				msgDiv.className = "message " + role;
+				
+				let formattedContent = text;
+				
+				// Enhanced formatting for model responses
+				if (role === "model") {
+					formattedContent = formatAnalysisResponse(text, analysisType);
+				}
+				
 				msgDiv.innerHTML = `
-					<div>${text}</div>
+					<div class="message-content">${formattedContent}</div>
 					<div class="message-time">${new Date().toLocaleTimeString()}</div>
 				`;
 				chatMessages.appendChild(msgDiv);
@@ -761,6 +896,106 @@
 				if (role === "model") {
 					announceToScreenReader("Analysis complete: " + text.substring(0, 100));
 				}
+			}
+
+			function formatAnalysisResponse(text, analysisType) {
+				if (analysisType === 'ocr') {
+					return `
+						<div class="analysis-type-badge">
+							<i class="fas fa-text-width" aria-hidden="true"></i>
+							Text Extraction (OCR)
+						</div>
+						<div class="ocr-content">${text}</div>
+					`;
+				}
+
+				// Format UI/UX analysis with better structure
+				let formattedText = text;
+				
+				// Add analysis type badge
+				const badge = `
+					<div class="analysis-type-badge">
+						<i class="fas fa-search" aria-hidden="true"></i>
+						UI/UX Analysis
+					</div>
+				`;
+
+				// Structure the analysis content
+				const analysisContent = `<div class="analysis-content">${formatAnalysisText(formattedText)}</div>`;
+				
+				return badge + analysisContent;
+			}
+
+			function formatAnalysisText(text) {
+				// Split text into lines and process
+				let lines = text.split('\n').filter(line => line.trim());
+				let formatted = '';
+				let currentSection = '';
+				let inList = false;
+
+				for (let line of lines) {
+					line = line.trim();
+					if (!line) continue;
+
+					// Check for section headers (lines ending with colon)
+					if (line.endsWith(':') && line.length < 50) {
+						if (inList) {
+							formatted += '</ul>';
+							inList = false;
+						}
+						currentSection = line.replace(':', '');
+						formatted += `<h3>${currentSection}</h3>`;
+						continue;
+					}
+
+					// Check for list items (starting with -, •, or numbers)
+					if (line.match(/^[-•*]\s/) || line.match(/^\d+\.\s/)) {
+						if (!inList) {
+							formatted += '<ul>';
+							inList = true;
+						}
+						
+						let cleanLine = line.replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, '');
+						
+						// Check if it's an issue or positive item
+						if (cleanLine.toLowerCase().includes('issue') || 
+							cleanLine.toLowerCase().includes('problem') ||
+							cleanLine.toLowerCase().includes('poor') ||
+							cleanLine.toLowerCase().includes('lacking') ||
+							cleanLine.toLowerCase().includes('inconsistent')) {
+							formatted += `<li><div class="issue-item">${cleanLine}</div></li>`;
+						} else if (cleanLine.toLowerCase().includes('good') || 
+								   cleanLine.toLowerCase().includes('well') ||
+								   cleanLine.toLowerCase().includes('effective') ||
+								   cleanLine.toLowerCase().includes('clear')) {
+							formatted += `<li><div class="positive-item">${cleanLine}</div></li>`;
+						} else {
+							formatted += `<li>${cleanLine}</li>`;
+						}
+						continue;
+					}
+
+					// Regular paragraph
+					if (inList) {
+						formatted += '</ul>';
+						inList = false;
+					}
+
+					// Check for summary or conclusion sections
+					if (line.toLowerCase().includes('summary') || 
+						line.toLowerCase().includes('conclusion') ||
+						line.toLowerCase().includes('overall')) {
+						formatted += `<div class="summary-section"><h4>Summary</h4><p>${line}</p></div>`;
+					} else {
+						formatted += `<p>${line}</p>`;
+					}
+				}
+
+				if (inList) {
+					formatted += '</ul>';
+				}
+
+				return formatted || text; // Fallback to original text if formatting fails
 			}
 
 			function appendImageMessage(file) {
@@ -834,10 +1069,14 @@
 				});
 			}
 
-			// Enhanced download processing
+			// Enhanced download processing with status updates
 			function processInlineData(result) {
 				const container = document.getElementById("downloadContainer");
-				container.innerHTML = "";
+				updateDownloadStatus('processing', 'Processing downloads...');
+				
+				// Clear previous downloads but keep status
+				const existingLinks = container.querySelectorAll('.download-link');
+				existingLinks.forEach(link => link.remove());
 				
 				let hasDownloads = false;
 				
@@ -871,14 +1110,38 @@
 					});
 				}
 				
-				if (!hasDownloads) {
-					container.innerHTML = `
-						<div class="empty-state">
-							<i class="fas fa-file-download" aria-hidden="true"></i>
-							<div>No downloads available</div>
-						</div>
-					`;
+				if (hasDownloads) {
+					updateDownloadStatus('completed', 'Downloads ready', `${container.querySelectorAll('.download-link').length} file(s) available`);
+				} else {
+					updateDownloadStatus('completed', 'Analysis complete', 'No downloadable files generated');
 				}
+			}
+
+			function updateDownloadStatus(status, message, detail = null) {
+				const container = document.getElementById("downloadContainer");
+				let statusDiv = container.querySelector('.downloads-status');
+				
+				if (!statusDiv) {
+					statusDiv = document.createElement('div');
+					statusDiv.className = 'downloads-status';
+					container.insertBefore(statusDiv, container.firstChild);
+				}
+				
+				// Remove existing status classes
+				statusDiv.classList.remove('waiting', 'processing', 'completed');
+				statusDiv.classList.add(status);
+				
+				let icon = 'fas fa-clock';
+				if (status === 'processing') icon = 'fas fa-spinner fa-spin';
+				if (status === 'completed') icon = 'fas fa-check-circle';
+				
+				statusDiv.innerHTML = `
+					<i class="${icon}" aria-hidden="true"></i>
+					<div>
+						<div class="status-text">${message}</div>
+						${detail ? `<div class="status-detail">${detail}</div>` : ''}
+					</div>
+				`;
 			}
 
 			// Enhanced chat session with better error handling
@@ -971,6 +1234,7 @@
 
 			async function performOCR(session, base64Data, mimeType) {
 				showProgress("Extracting text from image...", 60);
+				updateDownloadStatus('processing', 'Analyzing image for text...');
 				
 				const parts = [
 					{
@@ -995,7 +1259,7 @@
 						.filter(p => p.text)
 						.map(p => p.text)
 						.join("\n");
-					appendMessage("model", textResponse || "No text found in the image.");
+					appendMessage("model", textResponse || "No text found in the image.", "ocr");
 					processInlineData(result);
 				}
 			}
@@ -1003,6 +1267,7 @@
 			async function performAnalysis(session, base64Data, mimeType) {
 				// Step 1: Chain-of-thought analysis
 				showProgress("Performing deep analysis...", 40);
+				updateDownloadStatus('processing', 'Analyzing UI/UX elements...');
 				
 				const cotParts = [
 					{
@@ -1030,11 +1295,32 @@
 				
 				// Step 2: Summarize the CoT analysis
 				showProgress("Summarizing findings...", 75);
+				updateDownloadStatus('processing', 'Generating analysis summary...');
 				
 				const summaryMessage = {
 					role: "user",
 					parts: [{
-						text: `Based on this detailed analysis, extract only the specific issues and problems identified. List them concisely without explanations or introductions:\n\n${cotAnalysis}\n\nOutput format: Just list the actual issues found, one per line. If no issues, say "No significant issues found."`
+						text: `Based on this detailed analysis, create a structured summary of the findings. Format the response as follows:
+
+**Visual Design Issues:**
+- List specific visual design problems found
+- Include typography, color, spacing issues
+
+**Usability Concerns:**
+- List user experience and usability issues
+- Include navigation, accessibility, interaction problems
+
+**Positive Aspects:**
+- List what works well in the design
+- Highlight effective design choices
+
+**Priority Recommendations:**
+- List the most important improvements needed
+- Focus on high-impact changes
+
+If no significant issues are found, clearly state "No significant issues identified" and focus on positive aspects.
+
+Analysis: ${cotAnalysis}`
 					}]
 				};
 				
@@ -1045,7 +1331,7 @@
 						.filter(p => p.text)
 						.map(p => p.text)
 						.join("\n");
-					appendMessage("model", finalSummary || "No response received.");
+					appendMessage("model", finalSummary || "No response received.", "analysis");
 					processInlineData(summaryResult);
 				}
 			}
@@ -1249,6 +1535,7 @@
 			// Initialize drag and drop on page load
 			document.addEventListener('DOMContentLoaded', function() {
 				setupDragAndDrop();
+				updateDownloadStatus('waiting', 'Ready for analysis', 'Upload an image to begin');
 			});
 		</script>
 	</body>
