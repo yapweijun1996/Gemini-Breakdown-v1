@@ -366,17 +366,18 @@
 			}
 
 			.control-help {
-				font-size: 1rem;
-				color: var(--text-secondary);
+				font-size: 1.1rem;
+				color: var(--text-primary);
 				margin-top: 1rem;
 				line-height: 1.7;
-				font-weight: 500;
-				padding: 1rem 1.25rem;
-				background: var(--background-tertiary);
+				font-weight: 600;
+				padding: 1.25rem 1.5rem;
+				background: var(--background-secondary);
 				border-radius: var(--radius-md);
-				border-left: 3px solid var(--accent-color);
+				border-left: 4px solid var(--accent-color);
 				position: relative;
 				animation: fadeInUp 0.5s ease-out;
+				border: 1px solid var(--border-color);
 			}
 
 			@keyframes fadeInUp {
@@ -454,24 +455,27 @@
 
 			.analyze-btn {
 				width: 100%;
-				padding: 1.5rem 2rem;
-				background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+				padding: 1.75rem 2.5rem;
+				background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 50%, #1d4ed8 100%);
+				background-size: 200% 100%;
 				color: white;
 				border: none;
-				border-radius: var(--radius-lg);
-				font-size: 1.2rem;
-				font-weight: 700;
+				border-radius: var(--radius-xl);
+				font-size: 1.3rem;
+				font-weight: 800;
 				cursor: pointer;
-				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				gap: 0.75rem;
-				margin-top: 2rem;
-				box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4);
-				border: 2px solid transparent;
+				gap: 1rem;
+				margin-top: 2.5rem;
+				box-shadow: 0 8px 25px rgba(29, 78, 216, 0.5);
+				border: 3px solid transparent;
 				position: relative;
 				overflow: hidden;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
 			}
 
 			.analyze-btn::before {
@@ -481,30 +485,46 @@
 				left: -100%;
 				width: 100%;
 				height: 100%;
-				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-				transition: left 0.5s ease;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+				transition: left 0.6s ease;
+			}
+
+			.analyze-btn::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: var(--radius-xl);
+				background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+				opacity: 0;
+				transition: opacity 0.3s ease;
 			}
 
 			.analyze-btn:hover:not(:disabled) {
-				background: linear-gradient(135deg, #1e40af 0%, #5b21b6 100%);
-				transform: translateY(-3px);
-				box-shadow: 0 12px 30px rgba(29, 78, 216, 0.5);
+				background-position: 100% 0;
+				transform: translateY(-4px);
+				box-shadow: 0 15px 40px rgba(29, 78, 216, 0.6);
+				border-color: rgba(255, 255, 255, 0.3);
 			}
 
 			.analyze-btn:hover:not(:disabled)::before {
 				left: 100%;
 			}
 
+			.analyze-btn:hover:not(:disabled)::after {
+				opacity: 1;
+			}
+
 			.analyze-btn:active:not(:disabled) {
-				transform: translateY(-1px);
+				transform: translateY(-2px);
 				transition: transform 0.1s ease;
 			}
 
 			.analyze-btn:disabled {
-				opacity: 0.6;
+				opacity: 0.5;
 				cursor: not-allowed;
 				transform: none;
 				background: var(--secondary-color);
+				box-shadow: none;
 			}
 
 			.spinner {
@@ -581,28 +601,64 @@
 				background: var(--background-primary);
 				border: 2px solid var(--accent-color);
 				border-radius: var(--radius-xl);
-				padding: 2rem;
+				padding: 2.5rem;
 				margin: 1.5rem 0;
 				text-align: center;
 				box-shadow: var(--shadow-accent);
+				position: relative;
+				overflow: hidden;
+			}
+
+			.analysis-progress::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
+				animation: progressSweep 3s ease-in-out infinite;
+			}
+
+			@keyframes progressSweep {
+				0% { left: -100%; }
+				100% { left: 100%; }
 			}
 
 			.analysis-progress h4 {
 				color: var(--accent-color);
-				font-size: 1.2rem;
+				font-size: 1.3rem;
 				font-weight: 700;
-				margin: 0 0 1rem 0;
+				margin: 0 0 2rem 0;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				gap: 0.75rem;
+				position: relative;
+				z-index: 2;
+			}
+
+			.analysis-progress h4 i {
+				animation: brainPulse 2s ease-in-out infinite;
+			}
+
+			@keyframes brainPulse {
+				0%, 100% { 
+					transform: scale(1);
+					filter: brightness(1);
+				}
+				50% { 
+					transform: scale(1.1);
+					filter: brightness(1.2);
+				}
 			}
 
 			.analysis-progress .progress-steps {
 				display: flex;
 				justify-content: space-between;
-				margin: 1.5rem 0;
+				margin: 2rem 0;
 				position: relative;
+				z-index: 2;
 			}
 
 			.analysis-progress .progress-steps::before {
@@ -611,97 +667,200 @@
 				top: 50%;
 				left: 0;
 				right: 0;
-				height: 2px;
+				height: 3px;
 				background: var(--border-color);
 				transform: translateY(-50%);
 				z-index: 1;
+				border-radius: 2px;
 			}
 
 			.analysis-progress .progress-steps .progress-line {
 				position: absolute;
 				top: 50%;
 				left: 0;
-				height: 2px;
-				background: var(--accent-color);
+				height: 3px;
+				background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
 				transform: translateY(-50%);
-				transition: width 0.5s ease;
+				transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 				z-index: 2;
+				border-radius: 2px;
+				box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+				animation: progressGlow 2s ease-in-out infinite;
+			}
+
+			@keyframes progressGlow {
+				0%, 100% { 
+					box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+				}
+				50% { 
+					box-shadow: 0 0 20px rgba(124, 58, 237, 0.8);
+				}
 			}
 
 			.analysis-progress .step {
 				position: relative;
 				z-index: 3;
 				background: var(--background-primary);
-				border: 2px solid var(--border-color);
+				border: 3px solid var(--border-color);
 				border-radius: 50%;
-				width: 40px;
-				height: 40px;
+				width: 50px;
+				height: 50px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 0.875rem;
-				font-weight: 600;
+				font-size: 1rem;
+				font-weight: 700;
 				color: var(--text-muted);
-				transition: all 0.3s ease;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 			}
 
 			.analysis-progress .step.active {
 				border-color: var(--accent-color);
 				background: var(--accent-color);
 				color: white;
-				animation: stepPulse 2s infinite;
+				animation: stepPulse 1.5s ease-in-out infinite;
+				box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);
+			}
+
+			.analysis-progress .step.active::after {
+				content: '';
+				position: absolute;
+				inset: -8px;
+				border: 2px solid var(--accent-color);
+				border-radius: 50%;
+				opacity: 0;
+				animation: stepRipple 1.5s ease-out infinite;
 			}
 
 			.analysis-progress .step.completed {
 				border-color: var(--success-color);
 				background: var(--success-color);
 				color: white;
+				transform: scale(1.1);
+				animation: completedBounce 0.6s ease-out;
 			}
 
 			@keyframes stepPulse {
-				0%, 100% { transform: scale(1); }
-				50% { transform: scale(1.1); }
+				0%, 100% { 
+					transform: scale(1);
+					box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);
+				}
+				50% { 
+					transform: scale(1.05);
+					box-shadow: 0 0 0 10px rgba(124, 58, 237, 0);
+				}
+			}
+
+			@keyframes stepRipple {
+				0% {
+					opacity: 1;
+					transform: scale(0.8);
+				}
+				100% {
+					opacity: 0;
+					transform: scale(1.4);
+				}
+			}
+
+			@keyframes completedBounce {
+				0% { transform: scale(1); }
+				50% { transform: scale(1.2); }
+				100% { transform: scale(1.1); }
 			}
 
 			.analysis-progress .step-labels {
 				display: flex;
 				justify-content: space-between;
-				margin-top: 0.75rem;
+				margin-top: 1rem;
+				position: relative;
+				z-index: 2;
 			}
 
 			.analysis-progress .step-label {
-				font-size: 0.75rem;
+				font-size: 0.85rem;
 				color: var(--text-secondary);
 				text-align: center;
 				max-width: 80px;
+				font-weight: 600;
+				transition: all 0.3s ease;
 			}
 
 			.analysis-progress .step-label.active {
 				color: var(--accent-color);
-				font-weight: 600;
+				font-weight: 700;
+				transform: translateY(-2px);
+				animation: labelBounce 0.5s ease-out;
+			}
+
+			@keyframes labelBounce {
+				0% { transform: translateY(0); }
+				50% { transform: translateY(-4px); }
+				100% { transform: translateY(-2px); }
 			}
 
 			.progress-status-text {
-				margin-top: 1.5rem;
+				margin-top: 2rem;
 				color: var(--accent-color);
 				font-weight: 700;
-				font-size: 1.1rem;
+				font-size: 1.2rem;
 				text-align: center;
-				padding: 0.75rem 1.5rem;
+				padding: 1rem 2rem;
 				background: var(--accent-light);
 				border: 2px solid var(--border-accent);
 				border-radius: var(--radius-lg);
-				animation: statusPulse 2s infinite;
+				position: relative;
+				z-index: 2;
+				animation: statusTextPulse 2s ease-in-out infinite;
 			}
 
-			@keyframes statusPulse {
+			.progress-status-text::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: -10px;
+				width: 6px;
+				height: 6px;
+				background: var(--accent-color);
+				border-radius: 50%;
+				transform: translateY(-50%);
+				animation: dotPulse 1s ease-in-out infinite;
+			}
+
+			.progress-status-text::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				right: -10px;
+				width: 6px;
+				height: 6px;
+				background: var(--accent-color);
+				border-radius: 50%;
+				transform: translateY(-50%);
+				animation: dotPulse 1s ease-in-out infinite 0.5s;
+			}
+
+			@keyframes statusTextPulse {
 				0%, 100% { 
 					background: var(--accent-light);
 					border-color: var(--border-accent);
+					transform: scale(1);
 				}
 				50% { 
 					background: rgba(124, 58, 237, 0.15);
 					border-color: var(--accent-color);
+					transform: scale(1.02);
+				}
+			}
+
+			@keyframes dotPulse {
+				0%, 100% { 
+					opacity: 0.3;
+					transform: translateY(-50%) scale(1);
+				}
+				50% { 
+					opacity: 1;
+					transform: translateY(-50%) scale(1.5);
 				}
 			}
 
@@ -1244,12 +1403,26 @@
 
 			.sample-card h4 {
 				color: var(--primary-color);
-				font-size: 1rem;
+				font-size: 1.1rem;
 				font-weight: 700;
-				margin: 0 0 0.75rem 0;
+				margin: 0 0 1rem 0;
 				display: flex;
 				align-items: center;
 				gap: 0.5rem;
+				padding-bottom: 0.75rem;
+				border-bottom: 2px solid var(--border-color);
+				position: relative;
+			}
+
+			.sample-card h4::after {
+				content: '';
+				position: absolute;
+				bottom: -2px;
+				left: 0;
+				width: 30%;
+				height: 2px;
+				background: var(--accent-color);
+				border-radius: 1px;
 			}
 
 			.sample-card ul {
@@ -1464,7 +1637,7 @@
 				</h1>
 				<div class="status-indicator" id="statusIndicator">
 					<div class="status-dot" aria-hidden="true"></div>
-					<span id="statusText">Ready • Upload an image to begin</span>
+					<span id="statusText">System Ready</span>
 				</div>
 			</header>
 
@@ -1553,7 +1726,7 @@
 			<main class="main-content" role="main" aria-label="Analysis Results">
 				<section class="section chat-container">
 					<h2 id="dynamicTitle" class="section-title dynamic-title">
-						Upload Image to See Results
+						AI Image Analysis
 					</h2>
 					
 					<div id="chatMessages" 
@@ -1561,13 +1734,6 @@
 						 role="log" 
 						 aria-live="polite" 
 						 aria-label="Analysis conversation">
-						
-						<div class="results-notice">
-							<h4>
-								Ready for AI-Powered Analysis
-							</h4>
-							<p>Upload an image using the sidebar to begin. Our advanced AI will analyze your image and provide detailed insights including visual design feedback, usability recommendations, and actionable improvements.</p>
-						</div>
 						
 						<div class="enhanced-placeholder">
 							<i class="fas fa-brain" aria-hidden="true"></i>
@@ -1660,24 +1826,24 @@
 				
 				switch(state) {
 					case 'initial':
-						titleElement.textContent = "Upload Image to See Results";
-						statusElement.textContent = "Ready • Upload an image to begin";
+						titleElement.textContent = "AI Image Analysis";
+						statusElement.textContent = "System Ready";
 						statusDot.style.background = "#10b981";
 						break;
 					case 'uploaded':
-						titleElement.textContent = "Image Ready for Analysis";
-						statusElement.textContent = "Image loaded • Ready to analyze";
+						titleElement.textContent = "AI Image Analysis";
+						statusElement.textContent = "Image Loaded";
 						statusDot.style.background = "#3b82f6";
 						break;
 					case 'analyzing':
 						const type = analysisType === 'ocr' ? 'OCR' : 'UI/UX';
-						titleElement.textContent = `Analyzing Image (${type})`;
-						statusElement.textContent = `Analyzing • AI processing in progress`;
+						titleElement.textContent = "AI Image Analysis";
+						statusElement.textContent = `Processing ${type}`;
 						statusDot.style.background = "#f59e0b";
 						break;
 					case 'results':
-						titleElement.textContent = "Analysis Results";
-						statusElement.textContent = "Complete • Analysis ready";
+						titleElement.textContent = "AI Image Analysis";
+						statusElement.textContent = "Analysis Complete";
 						statusDot.style.background = "#10b981";
 						break;
 				}
@@ -1687,14 +1853,10 @@
 			function appendMessage(role, text, analysisType = null) {
 				const chatMessages = document.getElementById("chatMessages");
 				
-				// Remove enhanced placeholder and results notice if they exist
+				// Remove enhanced placeholder if it exists
 				const placeholder = chatMessages.querySelector(".enhanced-placeholder");
-				const notice = chatMessages.querySelector(".results-notice");
 				if (placeholder) {
 					placeholder.remove();
-				}
-				if (notice) {
-					notice.remove();
 				}
 				
 				const msgDiv = document.createElement("div");
@@ -1723,17 +1885,12 @@
 			function appendImageMessage(file) {
 				const chatMessages = document.getElementById("chatMessages");
 				
-				// Remove enhanced placeholder and results notice if they exist
+				// Remove enhanced placeholder if it exists
 				const placeholder = chatMessages.querySelector(".enhanced-placeholder");
-				const notice = chatMessages.querySelector(".results-notice");
 				if (placeholder) {
 					placeholder.remove();
 				}
-				if (notice) {
-					notice.remove();
-				}
 				
-				// Don't add redundant image thumbnail to chat area
 				// Just update the title to show image is ready
 				updateDynamicTitle('uploaded');
 			}
