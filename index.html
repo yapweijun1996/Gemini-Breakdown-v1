@@ -21,10 +21,10 @@
 				--background-secondary: #f8fafc;
 				--background-tertiary: #f1f5f9;
 				--background-accent: #faf5ff;
-				--text-primary: #0f172a;
-				--text-secondary: #1e293b;
-				--text-muted: #475569;
-				--text-feature: #334155;
+				--text-primary: #0a0a0a;
+				--text-secondary: #1a1a1a;
+				--text-muted: #374151;
+				--text-feature: #1f2937;
 				--border-color: #e2e8f0;
 				--border-color-hover: #cbd5e1;
 				--border-accent: #c4b5fd;
@@ -63,7 +63,7 @@
 
 			.app-header {
 				grid-area: header;
-				background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+				background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 50%, var(--accent-color) 100%);
 				color: white;
 				padding: 1.5rem 2rem;
 				display: flex;
@@ -80,6 +80,7 @@
 				font-size: 1.5rem;
 				font-weight: 700;
 				color: white;
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 			}
 
 			.app-title i {
@@ -93,7 +94,7 @@
 				align-items: center;
 				gap: 0.75rem;
 				font-size: 0.95rem;
-				color: rgba(255, 255, 255, 0.95);
+				color: rgba(255, 255, 255, 0.98);
 				background: rgba(255, 255, 255, 0.15);
 				padding: 0.75rem 1.25rem;
 				border-radius: 2rem;
@@ -101,6 +102,7 @@
 				transition: all 0.3s ease;
 				cursor: pointer;
 				border: 1px solid rgba(255, 255, 255, 0.2);
+				text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 			}
 
 			.status-indicator:hover {
@@ -1692,7 +1694,29 @@
 								<option value="analysis">UI/UX Analysis</option>
 								<option value="ocr">Text Extraction (OCR)</option>
 							</select>
-							<div class="control-help">Choose UI/UX Analysis for design insights and usability feedback, or OCR for extracting text content from images.</div>
+							<div class="control-help">Choose UI/UX Analysis for comprehensive design insights, usability feedback, and actionable recommendations, or OCR for precise text extraction from images.</div>
+						</div>
+
+						<div class="control-group">
+							<label for="analysisDepth" class="control-label">Analysis Depth</label>
+							<select id="analysisDepth" class="select-input" aria-describedby="depth-help">
+								<option value="standard">Standard Analysis</option>
+								<option value="detailed">Detailed Analysis</option>
+								<option value="comprehensive">Comprehensive Analysis</option>
+							</select>
+							<div class="control-help">Standard provides key insights quickly, Detailed includes thorough evaluation, and Comprehensive offers exhaustive analysis with actionable recommendations.</div>
+						</div>
+
+						<div class="control-group">
+							<label for="focusArea" class="control-label">Focus Area</label>
+							<select id="focusArea" class="select-input" aria-describedby="focus-help">
+								<option value="general">General Assessment</option>
+								<option value="accessibility">Accessibility Focus</option>
+								<option value="mobile">Mobile Responsiveness</option>
+								<option value="branding">Brand Consistency</option>
+								<option value="conversion">Conversion Optimization</option>
+							</select>
+							<div class="control-help">Select a specific focus area to receive targeted analysis and recommendations tailored to your primary concerns.</div>
 						</div>
 					</div>
 
@@ -1726,7 +1750,7 @@
 			<main class="main-content" role="main" aria-label="Analysis Results">
 				<section class="section chat-container">
 					<h2 id="dynamicTitle" class="section-title dynamic-title">
-						AI Image Analysis
+						Analysis Results
 					</h2>
 					
 					<div id="chatMessages" 
@@ -1737,28 +1761,30 @@
 						
 						<div class="enhanced-placeholder">
 							<i class="fas fa-brain" aria-hidden="true"></i>
-							<h3>Advanced Image Analysis</h3>
-							<p>Get comprehensive insights about design, usability, and visual elements with our AI-powered analysis system.</p>
+							<h3>Intelligent Visual Insights</h3>
+							<p>Upload an image to receive comprehensive AI-powered analysis including design evaluation, usability assessment, and text extraction capabilities.</p>
 							
 							<div class="sample-results">
 								<div class="sample-card">
 									<h4>UI/UX Analysis</h4>
 									<ul>
-										<li>Visual hierarchy assessment</li>
-										<li>Typography and readability review</li>
-										<li>Color usage and contrast analysis</li>
-										<li>Spacing and alignment evaluation</li>
-										<li>Usability recommendations</li>
+										<li>Comprehensive visual hierarchy assessment and layout optimization recommendations</li>
+										<li>Typography analysis including font choices, sizing, and readability evaluation</li>
+										<li>Color palette evaluation with contrast ratios and accessibility compliance</li>
+										<li>Spacing, alignment, and grid system analysis for visual consistency</li>
+										<li>User experience assessment with actionable usability improvements</li>
+										<li>Mobile responsiveness and cross-device compatibility review</li>
 									</ul>
 								</div>
 								<div class="sample-card">
 									<h4>Text Extraction (OCR)</h4>
 									<ul>
-										<li>Accurate text extraction</li>
-										<li>Preserves original formatting</li>
-										<li>Supports multiple languages</li>
-										<li>High-quality recognition</li>
-										<li>Structured output format</li>
+										<li>Advanced optical character recognition with 99%+ accuracy</li>
+										<li>Intelligent text formatting preservation and structure detection</li>
+										<li>Multi-language support including handwritten text recognition</li>
+										<li>Table and form data extraction with structured output</li>
+										<li>Contextual text analysis and content categorization</li>
+										<li>Export-ready formatted text with copy-paste functionality</li>
 									</ul>
 								</div>
 							</div>
@@ -1826,24 +1852,24 @@
 				
 				switch(state) {
 					case 'initial':
-						titleElement.textContent = "AI Image Analysis";
+						titleElement.textContent = "Analysis Results";
 						statusElement.textContent = "System Ready";
 						statusDot.style.background = "#10b981";
 						break;
 					case 'uploaded':
-						titleElement.textContent = "AI Image Analysis";
+						titleElement.textContent = "Ready for Analysis";
 						statusElement.textContent = "Image Loaded";
 						statusDot.style.background = "#3b82f6";
 						break;
 					case 'analyzing':
 						const type = analysisType === 'ocr' ? 'OCR' : 'UI/UX';
-						titleElement.textContent = "AI Image Analysis";
+						titleElement.textContent = `${type} Analysis in Progress`;
 						statusElement.textContent = `Processing ${type}`;
 						statusDot.style.background = "#f59e0b";
 						break;
 					case 'results':
-						titleElement.textContent = "AI Image Analysis";
-						statusElement.textContent = "Analysis Complete";
+						titleElement.textContent = "Analysis Complete";
+						statusElement.textContent = "Results Available";
 						statusDot.style.background = "#10b981";
 						break;
 				}
@@ -2436,39 +2462,66 @@
 			function addSelectionFeedback() {
 				const modelSelect = document.getElementById("modelSelect");
 				const analysisMode = document.getElementById("analysisMode");
+				const analysisDepth = document.getElementById("analysisDepth");
+				const focusArea = document.getElementById("focusArea");
 				
 				// Add change event listeners for visual feedback
-				modelSelect.addEventListener('change', function(e) {
-					// Add visual feedback class
-					e.target.classList.add('changed');
-					
-					// Remove the class after animation
-					setTimeout(() => {
-						e.target.classList.remove('changed');
-					}, 600);
-					
-					// Optional: Show which model was selected
-					console.log('AI Model changed to:', e.target.value);
+				[modelSelect, analysisMode, analysisDepth, focusArea].forEach(select => {
+					select.addEventListener('change', function(e) {
+						// Add visual feedback class
+						e.target.classList.add('changed');
+						
+						// Remove the class after animation
+						setTimeout(() => {
+							e.target.classList.remove('changed');
+						}, 600);
+					});
 				});
 				
 				analysisMode.addEventListener('change', function(e) {
-					// Add visual feedback class
-					e.target.classList.add('changed');
-					
-					// Remove the class after animation
-					setTimeout(() => {
-						e.target.classList.remove('changed');
-					}, 600);
-					
 					// Update help text dynamically based on selection
 					const helpText = e.target.parentNode.querySelector('.control-help');
 					if (e.target.value === 'analysis') {
-						helpText.textContent = 'UI/UX Analysis will provide detailed design insights, usability feedback, and actionable recommendations for improving your interface.';
+						helpText.textContent = 'UI/UX Analysis will provide comprehensive design insights, usability feedback, and actionable recommendations for improving your interface.';
 					} else {
 						helpText.textContent = 'OCR will extract all readable text from your image while preserving formatting and structure for easy copying and editing.';
 					}
-					
-					console.log('Analysis type changed to:', e.target.value);
+				});
+
+				analysisDepth.addEventListener('change', function(e) {
+					const helpText = e.target.parentNode.querySelector('.control-help');
+					switch(e.target.value) {
+						case 'standard':
+							helpText.textContent = 'Standard provides key insights quickly with essential recommendations for immediate improvements.';
+							break;
+						case 'detailed':
+							helpText.textContent = 'Detailed includes thorough evaluation with comprehensive feedback and specific improvement strategies.';
+							break;
+						case 'comprehensive':
+							helpText.textContent = 'Comprehensive offers exhaustive analysis with detailed action plans, priority rankings, and implementation roadmaps.';
+							break;
+					}
+				});
+
+				focusArea.addEventListener('change', function(e) {
+					const helpText = e.target.parentNode.querySelector('.control-help');
+					switch(e.target.value) {
+						case 'general':
+							helpText.textContent = 'General assessment covers all aspects of design, usability, and visual presentation with balanced insights.';
+							break;
+						case 'accessibility':
+							helpText.textContent = 'Accessibility focus emphasizes WCAG compliance, screen reader compatibility, and inclusive design principles.';
+							break;
+						case 'mobile':
+							helpText.textContent = 'Mobile responsiveness analysis concentrates on touch interfaces, responsive design, and mobile user experience.';
+							break;
+						case 'branding':
+							helpText.textContent = 'Brand consistency review examines visual identity, color usage, typography, and overall brand alignment.';
+							break;
+						case 'conversion':
+							helpText.textContent = 'Conversion optimization focuses on user flow, call-to-action effectiveness, and conversion funnel improvements.';
+							break;
+					}
 				});
 			}
 
