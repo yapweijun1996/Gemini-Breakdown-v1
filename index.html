@@ -1,129 +1,731 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Gemini Image Analysis - Professional UI</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 		
-
 		<style>
+			:root {
+				--primary-color: #2563eb;
+				--primary-hover: #1d4ed8;
+				--secondary-color: #64748b;
+				--success-color: #059669;
+				--warning-color: #d97706;
+				--error-color: #dc2626;
+				--background-primary: #ffffff;
+				--background-secondary: #f8fafc;
+				--background-tertiary: #f1f5f9;
+				--text-primary: #0f172a;
+				--text-secondary: #475569;
+				--text-muted: #94a3b8;
+				--border-color: #e2e8f0;
+				--border-color-hover: #cbd5e1;
+				--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+				--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+				--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+				--radius-sm: 0.375rem;
+				--radius-md: 0.5rem;
+				--radius-lg: 0.75rem;
+				--radius-xl: 1rem;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
 			body {
-				font-family: Arial, sans-serif;
-				margin: 20px;
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+				margin: 0;
+				padding: 0;
+				background: var(--background-secondary);
+				color: var(--text-primary);
+				line-height: 1.6;
 			}
-			#container {
-				max-width: 600px;
-				margin: 0 auto;
+
+			.app-container {
+				min-height: 100vh;
+				display: grid;
+				grid-template-columns: 400px 1fr;
+				grid-template-rows: auto 1fr;
+				grid-template-areas: 
+					"header header"
+					"sidebar main";
 			}
-			#uploadSection {
-				margin-bottom: 20px;
+
+			.app-header {
+				grid-area: header;
+				background: var(--background-primary);
+				border-bottom: 1px solid var(--border-color);
+				padding: 1rem 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				box-shadow: var(--shadow-sm);
 			}
-			.message {
-				padding: 8px;
-				margin-bottom: 10px;
-				border-radius: 4px;
-				white-space: break-spaces;
+
+			.app-title {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin: 0;
+				font-size: 1.5rem;
+				font-weight: 600;
+				color: var(--text-primary);
 			}
-			.user {
-				background: #f0f0f0;
+
+			.app-title i {
+				color: var(--primary-color);
+				font-size: 1.75rem;
 			}
-			.system {
-				background: #fff3cd;
+
+			.status-indicator {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-size: 0.875rem;
+				color: var(--text-secondary);
 			}
-			.model {
-				background: #d4edda;
+
+			.status-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--success-color);
+				animation: pulse 2s infinite;
 			}
-			#chatMessages {
-				border: 1px solid #ddd;
-				padding: 10px;
-				max-height: 95vh;
-				min-height: 10vh;
+
+			@keyframes pulse {
+				0%, 100% { opacity: 1; }
+				50% { opacity: 0.5; }
+			}
+
+			.sidebar {
+				grid-area: sidebar;
+				background: var(--background-primary);
+				border-right: 1px solid var(--border-color);
+				padding: 2rem;
 				overflow-y: auto;
 			}
-			#downloadContainer a {
-				display: block;
-				margin-top: 5px;
+
+			.main-content {
+				grid-area: main;
+				padding: 2rem;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
 			}
-			select {
-				margin-left: 10px;
+
+			.section {
+				background: var(--background-primary);
+				border-radius: var(--radius-lg);
+				padding: 1.5rem;
+				box-shadow: var(--shadow-sm);
+				border: 1px solid var(--border-color);
 			}
-			/* Modal preview styles */
-			#previewModal {
-				position: fixed;
-				top: 0;
-				left: 0;
+
+			.section-title {
+				font-size: 1.125rem;
+				font-weight: 600;
+				margin: 0 0 1rem 0;
+				color: var(--text-primary);
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.upload-zone {
+				border: 2px dashed var(--border-color);
+				border-radius: var(--radius-lg);
+				padding: 3rem 2rem;
+				text-align: center;
+				transition: all 0.3s ease;
+				cursor: pointer;
+				position: relative;
+				background: var(--background-tertiary);
+			}
+
+			.upload-zone:hover,
+			.upload-zone.drag-over {
+				border-color: var(--primary-color);
+				background: rgba(37, 99, 235, 0.05);
+				transform: translateY(-2px);
+			}
+
+			.upload-zone.has-file {
+				border-color: var(--success-color);
+				background: rgba(5, 150, 105, 0.05);
+			}
+
+			.upload-icon {
+				font-size: 3rem;
+				color: var(--text-muted);
+				margin-bottom: 1rem;
+				transition: color 0.3s ease;
+			}
+
+			.upload-zone:hover .upload-icon,
+			.upload-zone.drag-over .upload-icon {
+				color: var(--primary-color);
+			}
+
+			.upload-text {
+				font-size: 1.125rem;
+				font-weight: 500;
+				color: var(--text-primary);
+				margin-bottom: 0.5rem;
+			}
+
+			.upload-subtitle {
+				font-size: 0.875rem;
+				color: var(--text-secondary);
+			}
+
+			.file-input {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				cursor: pointer;
+			}
+
+			.controls-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+				margin: 1.5rem 0;
+			}
+
+			.control-group {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.control-label {
+				font-size: 0.875rem;
+				font-weight: 500;
+				color: var(--text-primary);
+			}
+
+			.select-input {
+				padding: 0.75rem 1rem;
+				border: 1px solid var(--border-color);
+				border-radius: var(--radius-md);
+				font-size: 0.875rem;
+				background: var(--background-primary);
+				color: var(--text-primary);
+				transition: all 0.2s ease;
+			}
+
+			.select-input:focus {
+				outline: none;
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+			}
+
+			.analyze-btn {
 				width: 100%;
-				height: 100%;
-				background: rgba(0, 0, 0, 0.5);
+				padding: 0.875rem 1.5rem;
+				background: var(--primary-color);
+				color: white;
+				border: none;
+				border-radius: var(--radius-md);
+				font-size: 1rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				margin-top: 1rem;
+			}
+
+			.analyze-btn:hover:not(:disabled) {
+				background: var(--primary-hover);
+				transform: translateY(-1px);
+				box-shadow: var(--shadow-md);
+			}
+
+			.analyze-btn:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+				transform: none;
+			}
+
+			.spinner {
+				width: 16px;
+				height: 16px;
+				border: 2px solid transparent;
+				border-top: 2px solid currentColor;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				to { transform: rotate(360deg); }
+			}
+
+			.preview-container {
+				margin-top: 1rem;
+				display: none;
+			}
+
+			.preview-container.show {
+				display: block;
+			}
+
+			.preview-image {
+				width: 100%;
+				max-height: 200px;
+				object-fit: cover;
+				border-radius: var(--radius-md);
+				border: 1px solid var(--border-color);
+			}
+
+			.image-info {
+				margin-top: 0.75rem;
+				padding: 0.75rem;
+				background: var(--background-tertiary);
+				border-radius: var(--radius-sm);
+				font-size: 0.875rem;
+				color: var(--text-secondary);
+			}
+
+			.chat-container {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-height: 0;
+			}
+
+			.chat-messages {
+				flex: 1;
+				overflow-y: auto;
+				padding: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+				min-height: 400px;
+				max-height: 70vh;
+			}
+
+			.message {
+				padding: 1rem 1.25rem;
+				border-radius: var(--radius-lg);
+				max-width: 85%;
+				word-wrap: break-word;
+				position: relative;
+				animation: slideIn 0.3s ease-out;
+			}
+
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateY(10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.message.user {
+				background: var(--primary-color);
+				color: white;
+				align-self: flex-end;
+				border-bottom-right-radius: var(--radius-sm);
+			}
+
+			.message.system {
+				background: var(--background-tertiary);
+				color: var(--text-secondary);
+				align-self: center;
+				font-style: italic;
+				font-size: 0.875rem;
+				max-width: 70%;
+				text-align: center;
+			}
+
+			.message.model {
+				background: var(--background-primary);
+				border: 1px solid var(--border-color);
+				color: var(--text-primary);
+				align-self: flex-start;
+				border-bottom-left-radius: var(--radius-sm);
+			}
+
+			.message-time {
+				font-size: 0.75rem;
+				opacity: 0.7;
+				margin-top: 0.5rem;
+			}
+
+			.image-message {
+				background: var(--background-primary);
+				border: 1px solid var(--border-color);
+				padding: 0.75rem;
+				border-radius: var(--radius-lg);
+				align-self: flex-end;
+				max-width: 300px;
+			}
+
+			.chat-image {
+				width: 100%;
+				max-width: 250px;
+				cursor: pointer;
+				border-radius: var(--radius-md);
+				transition: transform 0.2s ease;
+			}
+
+			.chat-image:hover {
+				transform: scale(1.02);
+			}
+
+			.modal {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.75);
 				display: none;
 				justify-content: center;
 				align-items: center;
 				z-index: 1000;
+				backdrop-filter: blur(4px);
 			}
-			#previewModal.show {
+
+			.modal.show {
 				display: flex;
+				animation: fadeIn 0.2s ease-out;
 			}
-			#previewModalContent {
-				background: #fff;
-				padding: 20px;
-				border-radius: 8px;
+
+			@keyframes fadeIn {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+
+			.modal-content {
+				background: var(--background-primary);
+				padding: 2rem;
+				border-radius: var(--radius-xl);
 				position: relative;
-				max-width: 90%;
-				max-height: 90%;
+				max-width: 90vw;
+				max-height: 90vh;
 				overflow: auto;
+				box-shadow: var(--shadow-lg);
 			}
-			#previewModalContent img {
+
+			.modal-content img {
 				max-width: 100%;
 				height: auto;
+				border-radius: var(--radius-md);
 			}
-			.closeBtn {
+
+			.close-btn {
 				position: absolute;
-				top: 10px;
-				right: 10px;
-				background: #f00;
-				color: #fff;
+				top: 1rem;
+				right: 1rem;
+				background: var(--error-color);
+				color: white;
 				border: none;
-				font-size: 14px;
-				padding: 3px 6px;
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
 				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.875rem;
+				transition: background 0.2s ease;
 			}
-			/* Style for thumbnail images inside chat */
-			.chatImage {
-				max-width: 200px;
-				cursor: pointer;
-				border: 1px solid #ccc;
-				border-radius: 4px;
+
+			.close-btn:hover {
+				background: #b91c1c;
+			}
+
+			.progress-bar {
+				width: 100%;
+				height: 4px;
+				background: var(--background-tertiary);
+				border-radius: 2px;
+				overflow: hidden;
+				margin: 1rem 0;
+			}
+
+			.progress-fill {
+				height: 100%;
+				background: var(--primary-color);
+				border-radius: 2px;
+				transition: width 0.3s ease;
+				animation: progress 2s ease-in-out infinite;
+			}
+
+			@keyframes progress {
+				0% { width: 0%; }
+				50% { width: 70%; }
+				100% { width: 100%; }
+			}
+
+			.download-links {
+				margin-top: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.download-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.5rem 1rem;
+				background: var(--success-color);
+				color: white;
+				text-decoration: none;
+				border-radius: var(--radius-md);
+				font-size: 0.875rem;
+				transition: background 0.2s ease;
+			}
+
+			.download-link:hover {
+				background: #047857;
+			}
+
+			.empty-state {
+				text-align: center;
+				padding: 3rem 2rem;
+				color: var(--text-muted);
+			}
+
+			.empty-state i {
+				font-size: 3rem;
+				margin-bottom: 1rem;
+				opacity: 0.5;
+			}
+
+			.alert {
+				padding: 1rem;
+				border-radius: var(--radius-md);
+				margin: 1rem 0;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			}
+
+			.alert.error {
+				background: rgba(220, 38, 38, 0.1);
+				border: 1px solid rgba(220, 38, 38, 0.2);
+				color: var(--error-color);
+			}
+
+			.alert.success {
+				background: rgba(5, 150, 105, 0.1);
+				border: 1px solid rgba(5, 150, 105, 0.2);
+				color: var(--success-color);
+			}
+
+			/* Responsive Design */
+			@media (max-width: 1024px) {
+				.app-container {
+					grid-template-columns: 1fr;
+					grid-template-areas: 
+						"header"
+						"sidebar"
+						"main";
+				}
+				
+				.sidebar {
+					border-right: none;
+					border-bottom: 1px solid var(--border-color);
+				}
+			}
+
+			@media (max-width: 768px) {
+				.app-header {
+					padding: 1rem;
+				}
+				
+				.app-title {
+					font-size: 1.25rem;
+				}
+				
+				.sidebar,
+				.main-content {
+					padding: 1rem;
+				}
+				
+				.controls-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			/* Accessibility improvements */
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border: 0;
+			}
+
+			*:focus {
+				outline: 2px solid var(--primary-color);
+				outline-offset: 2px;
+			}
+
+			button:focus,
+			select:focus,
+			input:focus {
+				outline: none;
+				box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 			}
 		</style>
 		<script src="./script.js"></script>
 	</head>
 	<body>
-		<div id="container">
-			<h1>Image Analysis with Google Gemini API</h1>
-			<div id="uploadSection">
-				<input type="file" id="imageInput" accept="image/*" />
-				<select id="modelSelect">
-					<option value="gemini-2.0-flash">gemini-2.0-flash</option>
-					<option value="gemma-3-27b-it">gemma-3-27b-it</option>
-					<option value="gemini-2.5-pro-preview-03-25">gemini-2.5-pro-preview-03-25</option>
-				</select>
-				<select id="analysisMode">
-					<option value="analysis">Image Analysis</option>
-					<option value="ocr">OCR (Text Extraction)</option>
-				</select>
-				<button id="sendBtn">Analyze Image</button>
-			</div>
-			<div id="chatMessages"></div>
-			<div id="downloadContainer"></div>
+		<div class="app-container" role="application" aria-label="Gemini Image Analysis Application">
+			<!-- Header -->
+			<header class="app-header">
+				<h1 class="app-title">
+					<i class="fas fa-eye" aria-hidden="true"></i>
+					Gemini Image Analysis
+				</h1>
+				<div class="status-indicator">
+					<div class="status-dot" aria-hidden="true"></div>
+					<span>Ready</span>
+				</div>
+			</header>
+
+			<!-- Sidebar with Upload Controls -->
+			<aside class="sidebar" role="complementary" aria-label="Upload and Analysis Controls">
+				<section class="section">
+					<h2 class="section-title">
+						<i class="fas fa-upload" aria-hidden="true"></i>
+						Upload Image
+					</h2>
+					
+					<div class="upload-zone" 
+						 id="uploadZone" 
+						 tabindex="0" 
+						 role="button" 
+						 aria-label="Click to upload image or drag and drop"
+						 onkeydown="handleUploadKeydown(event)">
+						<input type="file" 
+							   id="imageInput" 
+							   class="file-input" 
+							   accept="image/*" 
+							   aria-label="Select image file">
+						<i class="fas fa-cloud-upload-alt upload-icon" aria-hidden="true"></i>
+						<div class="upload-text">Drop image here or click to browse</div>
+						<div class="upload-subtitle">Support for JPG, PNG, GIF, WebP files</div>
+					</div>
+
+					<div class="preview-container" id="previewContainer">
+						<img id="previewImage" class="preview-image" alt="Image preview">
+						<div class="image-info" id="imageInfo"></div>
+					</div>
+				</section>
+
+				<section class="section">
+					<h2 class="section-title">
+						<i class="fas fa-cog" aria-hidden="true"></i>
+						Analysis Settings
+					</h2>
+					
+					<div class="controls-grid">
+						<div class="control-group">
+							<label for="modelSelect" class="control-label">AI Model</label>
+							<select id="modelSelect" class="select-input" aria-describedby="model-help">
+								<option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+								<option value="gemma-3-27b-it">Gemma 3 27B</option>
+								<option value="gemini-2.5-pro-preview-03-25">Gemini 2.5 Pro</option>
+							</select>
+						</div>
+						
+						<div class="control-group">
+							<label for="analysisMode" class="control-label">Analysis Type</label>
+							<select id="analysisMode" class="select-input" aria-describedby="mode-help">
+								<option value="analysis">UI/UX Analysis</option>
+								<option value="ocr">Text Extraction (OCR)</option>
+							</select>
+						</div>
+					</div>
+
+					<button id="analyzeBtn" 
+							class="analyze-btn" 
+							disabled 
+							aria-describedby="analyze-help">
+						<i class="fas fa-search" aria-hidden="true"></i>
+						<span id="btnText">Analyze Image</span>
+					</button>
+
+					<div id="progressContainer" style="display: none;">
+						<div class="progress-bar">
+							<div class="progress-fill" id="progressFill"></div>
+						</div>
+						<div id="progressText" class="upload-subtitle"></div>
+					</div>
+				</section>
+
+				<section class="section">
+					<h2 class="section-title">
+						<i class="fas fa-download" aria-hidden="true"></i>
+						Downloads
+					</h2>
+					<div id="downloadContainer" class="download-links">
+						<div class="empty-state">
+							<i class="fas fa-file-download" aria-hidden="true"></i>
+							<div>Downloads will appear here</div>
+						</div>
+					</div>
+				</section>
+			</aside>
+
+			<!-- Main Content Area -->
+			<main class="main-content" role="main" aria-label="Analysis Results">
+				<section class="section chat-container">
+					<h2 class="section-title">
+						<i class="fas fa-comments" aria-hidden="true"></i>
+						Analysis Results
+					</h2>
+					
+					<div id="chatMessages" 
+						 class="chat-messages" 
+						 role="log" 
+						 aria-live="polite" 
+						 aria-label="Analysis conversation">
+						<div class="empty-state">
+							<i class="fas fa-robot" aria-hidden="true"></i>
+							<div>Upload an image to start analysis</div>
+						</div>
+					</div>
+				</section>
+			</main>
 		</div>
 		
 		<!-- Modal Dialog for Image Preview -->
-		<div id="previewModal">
-			<div id="previewModalContent">
-				<button class="closeBtn" onclick="closePreviewModal()">X</button>
-				<img id="previewImage" src="" alt="Preview" />
+		<div id="previewModal" 
+			 class="modal" 
+			 role="dialog" 
+			 aria-labelledby="modal-title" 
+			 aria-hidden="true">
+			<div class="modal-content">
+				<button class="close-btn" 
+						onclick="closePreviewModal()" 
+						aria-label="Close image preview">
+					<i class="fas fa-times" aria-hidden="true"></i>
+				</button>
+				<h3 id="modal-title" class="sr-only">Image Preview</h3>
+				<img id="previewModalImage" src="" alt="Full size image preview" />
 			</div>
 		</div>
 		
 		<script>
-			// Simple configuration for Gemini API
+			// Enhanced configuration for Gemini API
 			const generationConfig = {
 				temperature: 1,
 				topP: 0.95,
@@ -133,67 +735,117 @@
 			};
 
 			let chatHistory = [];
+			let currentImageFile = null;
+			let isAnalyzing = false;
 
-			// Append text messages to chatMessages container
+			// Enhanced message functions with timestamps and better UX
 			function appendMessage(role, text) {
 				const chatMessages = document.getElementById("chatMessages");
+				
+				// Remove empty state if it exists
+				const emptyState = chatMessages.querySelector(".empty-state");
+				if (emptyState) {
+					emptyState.remove();
+				}
+				
 				const msgDiv = document.createElement("div");
 				msgDiv.className = "message " + role;
-				msgDiv.textContent = text;
+				msgDiv.innerHTML = `
+					<div>${text}</div>
+					<div class="message-time">${new Date().toLocaleTimeString()}</div>
+				`;
 				chatMessages.appendChild(msgDiv);
 				chatMessages.scrollTop = chatMessages.scrollHeight;
+				
+				// Announce to screen readers
+				if (role === "model") {
+					announceToScreenReader("Analysis complete: " + text.substring(0, 100));
+				}
 			}
 
-			// Append an image message in chatMessages with a thumbnail
 			function appendImageMessage(file) {
 				const chatMessages = document.getElementById("chatMessages");
+				
+				// Remove empty state if it exists
+				const emptyState = chatMessages.querySelector(".empty-state");
+				if (emptyState) {
+					emptyState.remove();
+				}
+				
 				const container = document.createElement("div");
-				container.className = "message user";
+				container.className = "image-message";
+				
 				const img = document.createElement("img");
-				img.className = "chatImage";
+				img.className = "chat-image";
 				img.src = URL.createObjectURL(file);
-				img.alt = file.name || "pasted image";
-				// On clicking the thumbnail, open modal preview
+				img.alt = file.name || "uploaded image";
 				img.onclick = function() {
 					showPreview(file);
 				};
+				img.onkeydown = function(e) {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						showPreview(file);
+					}
+				};
+				img.tabIndex = 0;
+				img.setAttribute('role', 'button');
+				img.setAttribute('aria-label', 'Click to view full size image');
+				
 				container.appendChild(img);
 				chatMessages.appendChild(container);
 				chatMessages.scrollTop = chatMessages.scrollHeight;
 			}
 
-			// Modal functions to display full image
+			// Enhanced preview functions with keyboard support
 			function showPreview(file) {
 				const modal = document.getElementById("previewModal");
-				const previewImage = document.getElementById("previewImage");
+				const previewImage = document.getElementById("previewModalImage");
 				previewImage.src = URL.createObjectURL(file);
 				modal.classList.add("show");
+				modal.setAttribute("aria-hidden", "false");
+				document.querySelector(".close-btn").focus();
 			}
 
 			function closePreviewModal() {
 				const modal = document.getElementById("previewModal");
 				modal.classList.remove("show");
-				document.getElementById("previewImage").src = "";
+				modal.setAttribute("aria-hidden", "true");
+				document.getElementById("previewModalImage").src = "";
 			}
 
-			// Convert file to Base64 string
+			// Enhanced file handling with better validation
 			function readFileAsBase64(file) {
 				return new Promise((resolve, reject) => {
+					if (!file.type.startsWith('image/')) {
+						reject(new Error('Please select a valid image file.'));
+						return;
+					}
+					
+					if (file.size > 10 * 1024 * 1024) { // 10MB limit
+						reject(new Error('Image file too large. Please select a file under 10MB.'));
+						return;
+					}
+					
 					const reader = new FileReader();
 					reader.onload = () => resolve(reader.result.split(",")[1]);
-					reader.onerror = reject;
+					reader.onerror = () => reject(new Error('Failed to read the image file.'));
 					reader.readAsDataURL(file);
 				});
 			}
 
-			// Process inline data if returned from API (e.g., download links)
+			// Enhanced download processing
 			function processInlineData(result) {
 				const container = document.getElementById("downloadContainer");
 				container.innerHTML = "";
+				
+				let hasDownloads = false;
+				
 				if (result.candidates) {
 					result.candidates.forEach((cand, i) => {
 						cand.content.parts.forEach((part, j) => {
 							if (part.inline_data) {
+								hasDownloads = true;
 								const bytes = atob(part.inline_data.data);
 								let byteNumbers = [];
 								for (let k = 0; k < bytes.length; k++) {
@@ -208,199 +860,396 @@
 								const link = document.createElement("a");
 								link.href = url;
 								link.download = "output_" + i + "_" + j + "." + ext;
-								link.textContent = "Download " + link.download;
+								link.className = "download-link";
+								link.innerHTML = `
+									<i class="fas fa-download" aria-hidden="true"></i>
+									Download ${link.download}
+								`;
 								container.appendChild(link);
 							}
 						});
 					});
 				}
+				
+				if (!hasDownloads) {
+					container.innerHTML = `
+						<div class="empty-state">
+							<i class="fas fa-file-download" aria-hidden="true"></i>
+							<div>No downloads available</div>
+						</div>
+					`;
+				}
 			}
 
-			// Start chat session for the selected model
+			// Enhanced chat session with better error handling
 			async function startChatSession(selectedModel) {
 				return {
 					sendMessage: async function(messageData) {
-						let userMessage = typeof messageData === "string"
-							? { role: "user", parts: [{ text: messageData }] }
-							: messageData;
-						const requestBody = {
-							contents: [...chatHistory, userMessage],
-							generationConfig
-						};
-						const url = "https://generativelanguage.googleapis.com/v1beta/models/" + selectedModel +
-							":generateContent?key=" + apiKey;
-						const response = await fetch(url, {
-							method: "POST",
-							headers: { "Content-Type": "application/json" },
-							body: JSON.stringify(requestBody)
-						});
-						if (!response.ok)
-							throw new Error("API error " + response.status);
-						const result = await response.json();
-						if (result.candidates && result.candidates.length > 0) {
-							const modelResponse = {
-								role: "model",
-								parts: result.candidates[0].content.parts
+						try {
+							let userMessage = typeof messageData === "string"
+								? { role: "user", parts: [{ text: messageData }] }
+								: messageData;
+							const requestBody = {
+								contents: [...chatHistory, userMessage],
+								generationConfig
 							};
-							chatHistory.push(userMessage, modelResponse);
-						} else {
-							throw new Error("No response from API");
+							const url = "https://generativelanguage.googleapis.com/v1beta/models/" + selectedModel +
+								":generateContent?key=" + apiKey;
+							const response = await fetch(url, {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify(requestBody)
+							});
+							
+							if (!response.ok) {
+								const errorText = await response.text();
+								throw new Error(`API error ${response.status}: ${errorText}`);
+							}
+							
+							const result = await response.json();
+							if (result.candidates && result.candidates.length > 0) {
+								const modelResponse = {
+									role: "model",
+									parts: result.candidates[0].content.parts
+								};
+								chatHistory.push(userMessage, modelResponse);
+							} else {
+								throw new Error("No response from API");
+							}
+							return result;
+						} catch (error) {
+							console.error('Chat session error:', error);
+							throw error;
 						}
-						return result;
 					}
 				};
 			}
 
-			// Run analysis or OCR based on selected mode
+			// Enhanced analysis function with progress tracking
 			async function runAnalysis() {
-				const imageInput = document.getElementById("imageInput");
-				const imageFile = imageInput.files[0];
+				if (isAnalyzing) return;
+				
+				const imageFile = currentImageFile;
 				if (!imageFile) {
-					alert("Please upload or paste an image.");
+					showAlert("Please upload an image first.", "error");
 					return;
 				}
 				
 				const analysisMode = document.getElementById("analysisMode").value;
 				const actionText = analysisMode === "ocr" ? "OCR" : "analysis";
 				
+				setAnalyzingState(true);
+				
 				appendMessage("user", "Uploaded image: " + (imageFile.name || "pasted-image.png"));
-				appendMessage("system", `Processing image for ${actionText}...`);
+				showProgress("Preparing image for " + actionText + "...", 10);
 
-				let parts = [];
 				try {
 					const base64Data = await readFileAsBase64(imageFile);
+					showProgress("Connecting to AI model...", 30);
 					
-					// Different prompts based on mode
+					const modelSelect = document.getElementById("modelSelect");
+					const selectedModel = modelSelect.value;
+					const session = await startChatSession(selectedModel);
+					
 					if (analysisMode === "ocr") {
-						parts.push({
-							text: "Extract text from the given image. The output text format must follow the same as the given image."
-						});
-						
-						parts.push({
-							inline_data: {
-								data: base64Data,
-								mime_type: imageFile.type
-							}
-						});
-						
-						const userMessage = { role: "user", parts };
-						const modelSelect = document.getElementById("modelSelect");
-						const selectedModel = modelSelect.value;
-						const session = await startChatSession(selectedModel);
-						const result = await session.sendMessage(userMessage);
-						
-						// Remove the "Processing..." message
-						const chatMessages = document.getElementById("chatMessages");
-						chatMessages.removeChild(chatMessages.lastChild);
-						
-						if (result.candidates && result.candidates.length > 0) {
-							const candidate = result.candidates[0];
-							const textResponse = candidate.content.parts
-								.filter(p => p.text)
-								.map(p => p.text)
-								.join("\n");
-							appendMessage("model", textResponse || "No response received.");
-							processInlineData(result);
-						}
+						await performOCR(session, base64Data, imageFile.type);
 					} else {
-						// Two-step analysis: CoT thinking then summarization
-						appendMessage("system", "Step 1: Deep analysis in progress...");
-						
-						// Step 1: Chain-of-thought analysis
-						const cotParts = [
-							{
-								text: "Analyze this image using chain-of-thought reasoning. Think step by step:\n\n1. First, describe what you see in the image (layout, elements, content, design)\n2. Then, systematically examine each aspect for potential issues:\n   - Visual hierarchy and layout\n   - Typography and readability\n   - Color usage and contrast\n   - Spacing and alignment\n   - Content organization\n   - Usability and user experience\n   - Technical quality\n3. For each area, think through what works well and what doesn't\n4. Consider the intended purpose/audience and how well the design serves that\n\nBe thorough in your thinking process. This analysis will be used to generate a final issue summary."
-							},
-							{
-								inline_data: {
-									data: base64Data,
-									mime_type: imageFile.type
-								}
-							}
-						];
-						
-						const cotMessage = { role: "user", parts: cotParts };
-						const modelSelect = document.getElementById("modelSelect");
-						const selectedModel = modelSelect.value;
-						const session = await startChatSession(selectedModel);
-						const cotResult = await session.sendMessage(cotMessage);
-						
-						if (!cotResult.candidates || cotResult.candidates.length === 0) {
-							throw new Error("No response from CoT analysis");
-						}
-						
-						const cotAnalysis = cotResult.candidates[0].content.parts
-							.filter(p => p.text)
-							.map(p => p.text)
-							.join("\n");
-						
-						// Update status
-						const chatMessages = document.getElementById("chatMessages");
-						chatMessages.removeChild(chatMessages.lastChild); // Remove "Step 1" message
-						appendMessage("system", "Step 2: Summarizing findings...");
-						
-						// Step 2: Summarize the CoT analysis
-						const summaryMessage = {
-							role: "user",
-							parts: [{
-								text: `Based on this detailed analysis, extract only the specific issues and problems identified. List them concisely without explanations or introductions:\n\n${cotAnalysis}\n\nOutput format: Just list the actual issues found, one per line. If no issues, say "No significant issues found."`
-							}]
-						};
-						
-						const summaryResult = await session.sendMessage(summaryMessage);
-						
-						// Remove the "Step 2" message
-						chatMessages.removeChild(chatMessages.lastChild);
-						
-						if (summaryResult.candidates && summaryResult.candidates.length > 0) {
-							const finalSummary = summaryResult.candidates[0].content.parts
-								.filter(p => p.text)
-								.map(p => p.text)
-								.join("\n");
-							appendMessage("model", finalSummary || "No response received.");
-							processInlineData(summaryResult);
-						}
+						await performAnalysis(session, base64Data, imageFile.type);
 					}
+					
+					showProgress("Analysis complete!", 100);
+					setTimeout(() => hideProgress(), 2000);
+					
 				} catch (err) {
-					appendMessage("system", "Error reading image.");
-					return;
-				}
-
-				try {
-					// OCR handling is now inside the try block above
-				} catch (err) {
-					appendMessage("system", "Error: " + err.message);
+					console.error('Analysis error:', err);
+					showAlert("Error: " + err.message, "error");
+					hideProgress();
+				} finally {
+					setAnalyzingState(false);
 				}
 			}
 
-			// Event listener for file input change (manual selection)
+			async function performOCR(session, base64Data, mimeType) {
+				showProgress("Extracting text from image...", 60);
+				
+				const parts = [
+					{
+						text: "Extract text from the given image. The output text format must follow the same as the given image."
+					},
+					{
+						inline_data: {
+							data: base64Data,
+							mime_type: mimeType
+						}
+					}
+				];
+				
+				const userMessage = { role: "user", parts };
+				const result = await session.sendMessage(userMessage);
+				
+				showProgress("Processing OCR results...", 90);
+				
+				if (result.candidates && result.candidates.length > 0) {
+					const candidate = result.candidates[0];
+					const textResponse = candidate.content.parts
+						.filter(p => p.text)
+						.map(p => p.text)
+						.join("\n");
+					appendMessage("model", textResponse || "No text found in the image.");
+					processInlineData(result);
+				}
+			}
+
+			async function performAnalysis(session, base64Data, mimeType) {
+				// Step 1: Chain-of-thought analysis
+				showProgress("Performing deep analysis...", 40);
+				
+				const cotParts = [
+					{
+						text: "Analyze this image using chain-of-thought reasoning. Think step by step:\n\n1. First, describe what you see in the image (layout, elements, content, design)\n2. Then, systematically examine each aspect for potential issues:\n   - Visual hierarchy and layout\n   - Typography and readability\n   - Color usage and contrast\n   - Spacing and alignment\n   - Content organization\n   - Usability and user experience\n   - Technical quality\n3. For each area, think through what works well and what doesn't\n4. Consider the intended purpose/audience and how well the design serves that\n\nBe thorough in your thinking process. This analysis will be used to generate a final issue summary."
+					},
+					{
+						inline_data: {
+							data: base64Data,
+							mime_type: mimeType
+						}
+					}
+				];
+				
+				const cotMessage = { role: "user", parts: cotParts };
+				const cotResult = await session.sendMessage(cotMessage);
+				
+				if (!cotResult.candidates || cotResult.candidates.length === 0) {
+					throw new Error("No response from CoT analysis");
+				}
+				
+				const cotAnalysis = cotResult.candidates[0].content.parts
+					.filter(p => p.text)
+					.map(p => p.text)
+					.join("\n");
+				
+				// Step 2: Summarize the CoT analysis
+				showProgress("Summarizing findings...", 75);
+				
+				const summaryMessage = {
+					role: "user",
+					parts: [{
+						text: `Based on this detailed analysis, extract only the specific issues and problems identified. List them concisely without explanations or introductions:\n\n${cotAnalysis}\n\nOutput format: Just list the actual issues found, one per line. If no issues, say "No significant issues found."`
+					}]
+				};
+				
+				const summaryResult = await session.sendMessage(summaryMessage);
+				
+				if (summaryResult.candidates && summaryResult.candidates.length > 0) {
+					const finalSummary = summaryResult.candidates[0].content.parts
+						.filter(p => p.text)
+						.map(p => p.text)
+						.join("\n");
+					appendMessage("model", finalSummary || "No response received.");
+					processInlineData(summaryResult);
+				}
+			}
+
+			// UI State Management Functions
+			function setAnalyzingState(analyzing) {
+				isAnalyzing = analyzing;
+				const btn = document.getElementById("analyzeBtn");
+				const btnText = document.getElementById("btnText");
+				
+				if (analyzing) {
+					btn.disabled = true;
+					btnText.innerHTML = '<div class="spinner"></div> Analyzing...';
+				} else {
+					btn.disabled = !currentImageFile;
+					btnText.innerHTML = '<i class="fas fa-search" aria-hidden="true"></i> Analyze Image';
+				}
+			}
+
+			function showProgress(text, percentage) {
+				const container = document.getElementById("progressContainer");
+				const fill = document.getElementById("progressFill");
+				const progressText = document.getElementById("progressText");
+				
+				container.style.display = "block";
+				fill.style.width = percentage + "%";
+				progressText.textContent = text;
+			}
+
+			function hideProgress() {
+				const container = document.getElementById("progressContainer");
+				container.style.display = "none";
+			}
+
+			function showAlert(message, type) {
+				const chatMessages = document.getElementById("chatMessages");
+				const alert = document.createElement("div");
+				alert.className = `alert ${type}`;
+				alert.innerHTML = `
+					<i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}" aria-hidden="true"></i>
+					${message}
+				`;
+				chatMessages.appendChild(alert);
+				chatMessages.scrollTop = chatMessages.scrollHeight;
+				
+				// Auto-remove after 5 seconds
+				setTimeout(() => {
+					if (alert.parentNode) {
+						alert.remove();
+					}
+				}, 5000);
+			}
+
+			function updateImagePreview(file) {
+				const container = document.getElementById("previewContainer");
+				const preview = document.getElementById("previewImage");
+				const info = document.getElementById("imageInfo");
+				
+				preview.src = URL.createObjectURL(file);
+				info.innerHTML = `
+					<strong>${file.name}</strong><br>
+					Size: ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+					Type: ${file.type}
+				`;
+				container.classList.add("show");
+			}
+
+			function updateUploadZone(hasFile) {
+				const zone = document.getElementById("uploadZone");
+				const btn = document.getElementById("analyzeBtn");
+				
+				if (hasFile) {
+					zone.classList.add("has-file");
+					btn.disabled = false;
+				} else {
+					zone.classList.remove("has-file");
+					btn.disabled = true;
+				}
+			}
+
+			// Enhanced drag and drop functionality
+			function setupDragAndDrop() {
+				const uploadZone = document.getElementById("uploadZone");
+				let dragCounter = 0;
+
+				['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+					uploadZone.addEventListener(eventName, preventDefaults, false);
+					document.body.addEventListener(eventName, preventDefaults, false);
+				});
+
+				function preventDefaults(e) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
+
+				uploadZone.addEventListener('dragenter', function(e) {
+					dragCounter++;
+					uploadZone.classList.add('drag-over');
+				});
+
+				uploadZone.addEventListener('dragleave', function(e) {
+					dragCounter--;
+					if (dragCounter === 0) {
+						uploadZone.classList.remove('drag-over');
+					}
+				});
+
+				uploadZone.addEventListener('drop', function(e) {
+					dragCounter = 0;
+					uploadZone.classList.remove('drag-over');
+					
+					const files = e.dataTransfer.files;
+					if (files.length > 0) {
+						handleFileSelection(files[0]);
+					}
+				});
+			}
+
+			function handleFileSelection(file) {
+				if (!file.type.startsWith('image/')) {
+					showAlert("Please select a valid image file.", "error");
+					return;
+				}
+				
+				currentImageFile = file;
+				updateImagePreview(file);
+				updateUploadZone(true);
+				appendImageMessage(file);
+				
+				// Update file input for consistency
+				const dt = new DataTransfer();
+				dt.items.add(file);
+				document.getElementById("imageInput").files = dt.files;
+			}
+
+			function handleUploadKeydown(event) {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					document.getElementById('imageInput').click();
+				}
+			}
+
+			// Accessibility helper
+			function announceToScreenReader(message) {
+				const announcement = document.createElement('div');
+				announcement.setAttribute('aria-live', 'polite');
+				announcement.setAttribute('aria-atomic', 'true');
+				announcement.className = 'sr-only';
+				announcement.textContent = message;
+				document.body.appendChild(announcement);
+				setTimeout(() => document.body.removeChild(announcement), 1000);
+			}
+
+			// Enhanced event listeners
 			document.getElementById("imageInput").addEventListener("change", function(e) {
 				const file = e.target.files[0];
 				if (file) {
-					appendImageMessage(file);
+					handleFileSelection(file);
 				}
 			});
 
-			// Handle paste event to support screenshot images from clipboard
+			// Enhanced paste handling
 			document.addEventListener("paste", function(e) {
 				let items = e.clipboardData && e.clipboardData.items;
 				if (!items) return;
+				
 				for (let i = 0; i < items.length; i++) {
 					const item = items[i];
 					if (item.kind === "file" && item.type.indexOf("image") !== -1) {
 						const blob = item.getAsFile();
-						// Set the file input to the pasted image using DataTransfer
-						const dt = new DataTransfer();
-						dt.items.add(blob);
-						document.getElementById("imageInput").files = dt.files;
-						appendImageMessage(blob);
-						break; // Process only one image per paste
+						handleFileSelection(blob);
+						showAlert("Image pasted successfully!", "success");
+						break;
 					}
 				}
 			});
 
-			// Event listener for analysis button
-			document.getElementById("sendBtn").addEventListener("click", runAnalysis);
+			// Modal keyboard handling
+			document.addEventListener('keydown', function(e) {
+				const modal = document.getElementById('previewModal');
+				if (modal.classList.contains('show') && e.key === 'Escape') {
+					closePreviewModal();
+				}
+			});
+
+			// Click outside modal to close
+			document.getElementById('previewModal').addEventListener('click', function(e) {
+				if (e.target === this) {
+					closePreviewModal();
+				}
+			});
+
+			// Upload zone click handler
+			document.getElementById("uploadZone").addEventListener("click", function() {
+				document.getElementById("imageInput").click();
+			});
+
+			// Analyze button event listener
+			document.getElementById("analyzeBtn").addEventListener("click", runAnalysis);
+
+			// Initialize drag and drop on page load
+			document.addEventListener('DOMContentLoaded', function() {
+				setupDragAndDrop();
+			});
 		</script>
 	</body>
 </html>
