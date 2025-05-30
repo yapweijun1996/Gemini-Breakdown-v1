@@ -91,27 +91,64 @@
 			.status-indicator {
 				display: flex;
 				align-items: center;
-				gap: 0.5rem;
-				font-size: 0.875rem;
-				color: rgba(255, 255, 255, 0.9);
-				background: rgba(255, 255, 255, 0.1);
-				padding: 0.5rem 1rem;
+				gap: 0.75rem;
+				font-size: 0.95rem;
+				color: rgba(255, 255, 255, 0.95);
+				background: rgba(255, 255, 255, 0.15);
+				padding: 0.75rem 1.25rem;
 				border-radius: 2rem;
-				backdrop-filter: blur(8px);
+				backdrop-filter: blur(12px);
+				transition: all 0.3s ease;
+				cursor: pointer;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+			}
+
+			.status-indicator:hover {
+				background: rgba(255, 255, 255, 0.2);
+				transform: translateY(-1px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 			}
 
 			.status-dot {
-				width: 8px;
-				height: 8px;
+				width: 10px;
+				height: 10px;
 				border-radius: 50%;
 				background: #10b981;
-				animation: pulse 2s infinite;
-				box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+				animation: statusPulse 2.5s infinite;
+				box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+				position: relative;
 			}
 
-			@keyframes pulse {
-				0%, 100% { opacity: 1; transform: scale(1); }
-				50% { opacity: 0.7; transform: scale(1.1); }
+			.status-dot::after {
+				content: '';
+				position: absolute;
+				inset: -3px;
+				border-radius: 50%;
+				background: inherit;
+				opacity: 0.3;
+				animation: statusRipple 2.5s infinite;
+			}
+
+			@keyframes statusPulse {
+				0%, 100% { 
+					opacity: 1; 
+					transform: scale(1); 
+				}
+				50% { 
+					opacity: 0.8; 
+					transform: scale(1.2); 
+				}
+			}
+
+			@keyframes statusRipple {
+				0% { 
+					transform: scale(0.8); 
+					opacity: 0.8; 
+				}
+				100% { 
+					transform: scale(2); 
+					opacity: 0; 
+				}
 			}
 
 			.sidebar {
@@ -158,7 +195,7 @@
 			}
 
 			.section-title {
-				font-size: 1.3rem;
+				font-size: 1.4rem;
 				font-weight: 800;
 				margin: 0 0 2rem 0;
 				color: var(--text-primary);
@@ -166,49 +203,55 @@
 				align-items: center;
 				gap: 1rem;
 				position: relative;
-				padding: 1rem 1.5rem;
-				background: linear-gradient(135deg, var(--accent-light) 0%, rgba(124, 58, 237, 0.05) 100%);
+				padding: 1.25rem 1.5rem;
+				background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-accent) 100%);
 				border-radius: var(--radius-lg);
-				border-left: 5px solid var(--accent-color);
-				margin: -1rem -1.5rem 2rem -1.5rem;
-			}
-
-			.section-title i {
-				color: var(--accent-color);
-				font-size: 1.6rem;
-				background: rgba(124, 58, 237, 0.15);
-				padding: 0.75rem;
-				border-radius: var(--radius-lg);
-				box-shadow: 0 2px 4px rgba(124, 58, 237, 0.1);
+				border-left: 4px solid var(--accent-color);
+				margin: -1rem -1.5rem 2.5rem -1.5rem;
+				transition: all 0.3s ease;
+				letter-spacing: -0.025em;
 			}
 
 			.section-title::after {
 				content: '';
 				position: absolute;
-				bottom: -0.75rem;
+				bottom: 0;
 				left: 0;
 				right: 0;
 				height: 2px;
 				background: linear-gradient(90deg, var(--accent-color) 0%, transparent 100%);
 				border-radius: 1px;
+				animation: slideIn 0.6s ease-out;
+			}
+
+			@keyframes slideIn {
+				from {
+					width: 0;
+				}
+				to {
+					width: 100%;
+				}
 			}
 
 			.dynamic-title {
-				transition: all 0.3s ease;
-				font-size: 1.5rem;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+				font-size: 1.6rem;
 				font-weight: 800;
 				background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
 				background-clip: text;
+				letter-spacing: -0.025em;
+				animation: titleGlow 3s ease-in-out infinite;
 			}
 
-			.dynamic-title i {
-				background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				background-clip: text;
-				font-size: 1.75rem;
+			@keyframes titleGlow {
+				0%, 100% { 
+					filter: brightness(1);
+				}
+				50% { 
+					filter: brightness(1.1);
+				}
 			}
 
 			.upload-zone {
@@ -271,122 +314,197 @@
 			}
 
 			.controls-grid {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 1.5rem;
+				display: flex;
+				flex-direction: column;
+				gap: 2rem;
 				margin: 2rem 0;
 			}
 
 			.control-group {
-				display: flex;
-				flex-direction: column;
-				gap: 0.75rem;
+				background: var(--background-primary);
+				border: 2px solid var(--border-color);
+				border-radius: var(--radius-xl);
+				padding: 1.5rem;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				position: relative;
+				overflow: hidden;
+			}
+
+			.control-group::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 2px;
+				background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+				transition: left 0.3s ease;
+			}
+
+			.control-group:hover {
+				border-color: var(--accent-color);
+				transform: translateY(-2px);
+				box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
+			}
+
+			.control-group:hover::before {
+				left: 0;
+			}
+
+			.control-group:focus-within {
+				border-color: var(--accent-color);
+				box-shadow: 0 0 0 3px var(--accent-light);
 			}
 
 			.control-label {
-				font-size: 0.95rem;
-				font-weight: 600;
+				font-size: 1.1rem;
+				font-weight: 700;
 				color: var(--text-primary);
+				margin-bottom: 0.75rem;
+				display: block;
+				letter-spacing: -0.025em;
 			}
 
 			.control-help {
-				font-size: 0.95rem;
+				font-size: 1rem;
 				color: var(--text-secondary);
-				margin-top: 0.5rem;
-				line-height: 1.6;
+				margin-top: 1rem;
+				line-height: 1.7;
 				font-weight: 500;
+				padding: 1rem 1.25rem;
 				background: var(--background-tertiary);
-				padding: 0.75rem 1rem;
 				border-radius: var(--radius-md);
 				border-left: 3px solid var(--accent-color);
+				position: relative;
+				animation: fadeInUp 0.5s ease-out;
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
 			}
 
 			.select-input {
-				padding: 1rem 1.25rem;
+				width: 100%;
+				padding: 1.25rem 1.5rem;
 				border: 2px solid var(--border-color);
 				border-radius: var(--radius-lg);
-				font-size: 0.95rem;
+				font-size: 1rem;
 				background: var(--background-primary);
 				color: var(--text-primary);
-				transition: all 0.3s ease;
-				font-weight: 500;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				font-weight: 600;
 				cursor: pointer;
 				position: relative;
 				appearance: none;
-				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-				background-position: right 0.75rem center;
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+				background-position: right 1rem center;
 				background-repeat: no-repeat;
 				background-size: 1.5em 1.5em;
-				padding-right: 3rem;
+				padding-right: 3.5rem;
 			}
 
 			.select-input:hover {
 				border-color: var(--accent-color);
 				background-color: var(--background-accent);
 				transform: translateY(-1px);
-				box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.1);
+				box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
 			}
 
 			.select-input:focus {
 				outline: none;
 				border-color: var(--accent-color);
-				box-shadow: 0 0 0 3px var(--accent-light), 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+				box-shadow: 0 0 0 3px var(--accent-light), 0 8px 25px rgba(124, 58, 237, 0.2);
 				background-color: var(--background-primary);
 				transform: translateY(-1px);
 			}
 
 			.select-input:active {
 				transform: translateY(0);
+				transition: transform 0.1s ease;
 			}
 
-			/* Visual feedback for changed selections */
 			.select-input.changed {
 				border-color: var(--success-color);
 				background: linear-gradient(135deg, var(--background-primary) 0%, rgba(5, 150, 105, 0.05) 100%);
-				animation: selectionChanged 0.6s ease-out;
+				animation: selectionChanged 0.8s ease-out;
 			}
 
 			@keyframes selectionChanged {
 				0% {
 					border-color: var(--success-color);
 					box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
+					transform: scale(1.02);
+				}
+				50% {
+					transform: scale(1.01);
 				}
 				100% {
 					border-color: var(--success-color);
 					box-shadow: 0 0 0 0px rgba(5, 150, 105, 0);
+					transform: scale(1);
 				}
 			}
 
 			.analyze-btn {
 				width: 100%;
-				padding: 1.25rem 2rem;
+				padding: 1.5rem 2rem;
 				background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
 				color: white;
 				border: none;
 				border-radius: var(--radius-lg);
-				font-size: 1.1rem;
+				font-size: 1.2rem;
 				font-weight: 700;
 				cursor: pointer;
-				transition: all 0.3s ease;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				gap: 0.75rem;
-				margin-top: 1.5rem;
-				box-shadow: 0 4px 6px -1px rgba(29, 78, 216, 0.3), 0 2px 4px -2px rgba(29, 78, 216, 0.2);
+				margin-top: 2rem;
+				box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4);
 				border: 2px solid transparent;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.analyze-btn::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+				transition: left 0.5s ease;
 			}
 
 			.analyze-btn:hover:not(:disabled) {
 				background: linear-gradient(135deg, #1e40af 0%, #5b21b6 100%);
-				transform: translateY(-2px);
-				box-shadow: 0 10px 15px -3px rgba(29, 78, 216, 0.4), 0 4px 6px -4px rgba(29, 78, 216, 0.3);
+				transform: translateY(-3px);
+				box-shadow: 0 12px 30px rgba(29, 78, 216, 0.5);
+			}
+
+			.analyze-btn:hover:not(:disabled)::before {
+				left: 100%;
+			}
+
+			.analyze-btn:active:not(:disabled) {
+				transform: translateY(-1px);
+				transition: transform 0.1s ease;
 			}
 
 			.analyze-btn:disabled {
 				opacity: 0.6;
 				cursor: not-allowed;
 				transform: none;
+				background: var(--secondary-color);
 			}
 
 			.spinner {
@@ -1344,9 +1462,9 @@
 					<i class="fas fa-eye" aria-hidden="true"></i>
 					Gemini Image Analysis
 				</h1>
-				<div class="status-indicator">
+				<div class="status-indicator" id="statusIndicator">
 					<div class="status-dot" aria-hidden="true"></div>
-					<span>System Ready</span>
+					<span id="statusText">Ready • Upload an image to begin</span>
 				</div>
 			</header>
 
@@ -1354,7 +1472,6 @@
 			<aside class="sidebar" role="complementary" aria-label="Upload and Analysis Controls">
 				<section class="section">
 					<h2 class="section-title">
-						<i class="fas fa-upload" aria-hidden="true"></i>
 						Upload Image
 					</h2>
 					
@@ -1382,7 +1499,6 @@
 
 				<section class="section">
 					<h2 class="section-title">
-						<i class="fas fa-cog" aria-hidden="true"></i>
 						Analysis Settings
 					</h2>
 					
@@ -1411,13 +1527,11 @@
 							class="analyze-btn" 
 							disabled 
 							aria-describedby="analyze-help">
-						<i class="fas fa-search" aria-hidden="true"></i>
 						<span id="btnText">Analyze Image</span>
 					</button>
 
 					<div id="uploadProgressContainer" class="upload-progress">
 						<h4>
-							<i class="fas fa-upload" aria-hidden="true"></i>
 							Processing Upload
 						</h4>
 						<div class="upload-progress-bar">
@@ -1439,7 +1553,6 @@
 			<main class="main-content" role="main" aria-label="Analysis Results">
 				<section class="section chat-container">
 					<h2 id="dynamicTitle" class="section-title dynamic-title">
-						<i class="fas fa-upload" aria-hidden="true"></i>
 						Upload Image to See Results
 					</h2>
 					
@@ -1451,20 +1564,19 @@
 						
 						<div class="results-notice">
 							<h4>
-								<i class="fas fa-upload" aria-hidden="true"></i>
-								Upload an Image to Begin Analysis
+								Ready for AI-Powered Analysis
 							</h4>
-							<p>Start by uploading an image using the drag & drop area or browse button in the sidebar. Once uploaded, click "Analyze Image" to receive detailed AI-powered insights including visual design feedback, usability recommendations, and actionable improvements.</p>
+							<p>Upload an image using the sidebar to begin. Our advanced AI will analyze your image and provide detailed insights including visual design feedback, usability recommendations, and actionable improvements.</p>
 						</div>
 						
 						<div class="enhanced-placeholder">
-							<i class="fas fa-robot" aria-hidden="true"></i>
-							<h3>AI-Powered Image Analysis</h3>
-							<p>Upload an image to get detailed insights about design, usability, and visual elements. Our advanced AI will analyze your image and provide actionable feedback.</p>
+							<i class="fas fa-brain" aria-hidden="true"></i>
+							<h3>Advanced Image Analysis</h3>
+							<p>Get comprehensive insights about design, usability, and visual elements with our AI-powered analysis system.</p>
 							
 							<div class="sample-results">
 								<div class="sample-card">
-									<h4><i class="fas fa-search" aria-hidden="true"></i> UI/UX Analysis</h4>
+									<h4>UI/UX Analysis</h4>
 									<ul>
 										<li>Visual hierarchy assessment</li>
 										<li>Typography and readability review</li>
@@ -1474,7 +1586,7 @@
 									</ul>
 								</div>
 								<div class="sample-card">
-									<h4><i class="fas fa-text-width" aria-hidden="true"></i> Text Extraction (OCR)</h4>
+									<h4>Text Extraction (OCR)</h4>
 									<ul>
 										<li>Accurate text extraction</li>
 										<li>Preserves original formatting</li>
@@ -1486,8 +1598,13 @@
 							</div>
 							
 							<div class="getting-started">
-								<h4><i class="fas fa-lightbulb" aria-hidden="true"></i> Quick Tip</h4>
-								<p>For best results, upload clear, high-resolution images and choose the analysis type that matches your needs.</p>
+								<h4>How It Works</h4>
+								<ol>
+									<li>Upload your image using drag & drop or the browse button</li>
+									<li>Select your preferred AI model and analysis type</li>
+									<li>Click "Analyze Image" to start the process</li>
+									<li>Review detailed insights and recommendations</li>
+								</ol>
 							</div>
 						</div>
 					</div>
@@ -1535,28 +1652,33 @@
 				{ id: 4, label: "Complete", description: "Finished" }
 			];
 
-			// Dynamic title management
+			// Dynamic title management with status updates
 			function updateDynamicTitle(state, analysisType = null) {
 				const titleElement = document.getElementById("dynamicTitle");
-				const icon = titleElement.querySelector("i");
+				const statusElement = document.getElementById("statusText");
+				const statusDot = document.querySelector(".status-dot");
 				
 				switch(state) {
 					case 'initial':
-						icon.className = "fas fa-upload";
-						titleElement.lastChild.textContent = " Upload Image to See Results";
+						titleElement.textContent = "Upload Image to See Results";
+						statusElement.textContent = "Ready • Upload an image to begin";
+						statusDot.style.background = "#10b981";
 						break;
 					case 'uploaded':
-						icon.className = "fas fa-image";
-						titleElement.lastChild.textContent = " Image Ready for Analysis";
+						titleElement.textContent = "Image Ready for Analysis";
+						statusElement.textContent = "Image loaded • Ready to analyze";
+						statusDot.style.background = "#3b82f6";
 						break;
 					case 'analyzing':
-						icon.className = "fas fa-cog fa-spin";
 						const type = analysisType === 'ocr' ? 'OCR' : 'UI/UX';
-						titleElement.lastChild.textContent = ` Analyzing Image (${type})`;
+						titleElement.textContent = `Analyzing Image (${type})`;
+						statusElement.textContent = `Analyzing • AI processing in progress`;
+						statusDot.style.background = "#f59e0b";
 						break;
 					case 'results':
-						icon.className = "fas fa-comments";
-						titleElement.lastChild.textContent = " Analysis Results";
+						titleElement.textContent = "Analysis Results";
+						statusElement.textContent = "Complete • Analysis ready";
+						statusDot.style.background = "#10b981";
 						break;
 				}
 			}
@@ -1935,14 +2057,17 @@
 					}
 					
 					const finishProgress = showUploadProgress();
+					updateDynamicTitle('uploaded');
 					
 					const reader = new FileReader();
 					reader.onload = () => {
 						finishProgress();
+						
 						resolve(reader.result.split(",")[1]);
 					};
 					reader.onerror = () => {
 						finishProgress();
+						
 						reject(new Error('Failed to read the image file.'));
 					};
 					reader.readAsDataURL(file);
@@ -1955,7 +2080,7 @@
 				// The analysis results are displayed directly in the chat
 			}
 
-			// UI State Management Functions
+			// UI State Management Functions with better feedback
 			function setAnalyzingState(analyzing) {
 				isAnalyzing = analyzing;
 				const btn = document.getElementById("analyzeBtn");
@@ -1964,9 +2089,11 @@
 				if (analyzing) {
 					btn.disabled = true;
 					btnText.innerHTML = '<div class="spinner"></div> Analyzing...';
+					btn.style.background = 'var(--secondary-color)';
 				} else {
 					btn.disabled = !currentImageFile;
-					btnText.innerHTML = '<i class="fas fa-search" aria-hidden="true"></i> Analyze Image';
+					btnText.textContent = 'Analyze Image';
+					btn.style.background = '';
 				}
 			}
 
